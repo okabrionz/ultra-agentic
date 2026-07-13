@@ -43,6 +43,7 @@ export const siteConfig = {
   },
   navigation: [
     { label: 'Catalog', href: '/catalog/' },
+    { label: 'Blog', href: '/blog/' },
     { label: 'Get started', href: '/get-started/' },
     { label: 'Sponsors', href: '/sponsors/' },
     { label: 'About', href: '/about/' },
