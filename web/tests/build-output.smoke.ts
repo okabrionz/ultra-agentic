@@ -22,6 +22,15 @@ const catalogRoutes = [
   'catalog/repository-operations-mcp/index.html',
   'catalog/tool-failure-dataset/index.html'
 ] as const;
+const blogRoutes = [
+  'blog/index.html',
+  'blog/building-in-public-catalog-honesty/index.html',
+  'blog/composing-agent-workflows/index.html',
+  'blog/how-to-read-maturity-labels/index.html',
+  'blog/skills-vs-mcp-vs-datasets/index.html',
+  'blog/ultra-agentic-roadmap-kickoff/index.html',
+  'blog/what-is-an-mcp-server/index.html'
+] as const;
 const releaseVersion = '0.1.0';
 const releasedCatalogRoutes = [
   {
@@ -139,7 +148,7 @@ function catalogCardHtml(html: string, route: string): string {
 
 describe('generated routes', () => {
   test('emits every public page and catalog detail route', () => {
-    for (const route of [...pageRoutes, ...catalogRoutes]) {
+    for (const route of [...pageRoutes, ...catalogRoutes, ...blogRoutes]) {
       expect(existsSync(join(dist, route)), route).toBe(true);
     }
   });
@@ -261,7 +270,8 @@ describe('built metadata', () => {
       'catalog/index.html': 'Agent Tool Catalog — Ultra Agentic',
       'about/index.html': 'About the Agent Infrastructure Catalog — Ultra Agentic',
       'sponsors/index.html': 'Sponsor Open Agent Infrastructure — Ultra Agentic',
-      'get-started/index.html': 'Evaluate and Compose Agent Tools — Ultra Agentic'
+      'get-started/index.html': 'Evaluate and Compose Agent Tools — Ultra Agentic',
+      'blog/index.html': 'Blog — Ultra Agentic'
     } as const;
 
     for (const [route, title] of Object.entries(expectedTitles)) {
@@ -274,6 +284,32 @@ describe('built metadata', () => {
 
     expect(html).not.toContain('property="og:image"');
     expect(html).not.toContain('name="twitter:image"');
+  });
+
+  test('links to the blog from primary navigation on every public page', async () => {
+    for (const route of pageRoutes.filter((route) => route !== '404.html')) {
+      const html = await readBuiltPage(route);
+      expect(html, route).toContain('href="/blog/"');
+    }
+  });
+});
+
+describe('blog', () => {
+  test('lists every published post on the blog index', async () => {
+    const html = await readBuiltPage('blog/index.html');
+
+    for (const route of blogRoutes.filter((route) => route !== 'blog/index.html')) {
+      const href = `/${route.replace('index.html', '')}`;
+      expect(html, route).toContain(`href="${href}"`);
+    }
+  });
+
+  test('marks each blog detail page with BlogPosting structured data', async () => {
+    for (const route of blogRoutes.filter((route) => route !== 'blog/index.html')) {
+      const html = await readBuiltPage(route);
+      expect(html, route).toContain('data-schema="blog-post"');
+      expect(html, route).toContain('"@type":"BlogPosting"');
+    }
   });
 });
 

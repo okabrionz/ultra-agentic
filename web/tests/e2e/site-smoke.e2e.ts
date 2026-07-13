@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 const generatedRoutes = [
 	{ name: 'home', path: '/', status: 200 },
 	{ name: 'catalog', path: '/catalog/', status: 200 },
+	{ name: 'blog', path: '/blog/', status: 200 },
+	{ name: 'blog mcp primer', path: '/blog/what-is-an-mcp-server/', status: 200 },
 	{ name: 'get started', path: '/get-started/', status: 200 },
 	{ name: 'sponsors', path: '/sponsors/', status: 200 },
 	{ name: 'about', path: '/about/', status: 200 },
