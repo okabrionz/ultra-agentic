@@ -1,3 +1,43 @@
+# Root README Refresh Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Replace the inaccurate root placeholder with a truthful, useful README for the implemented Ultra Agentic roadmap catalog.
+
+**Architecture:** Keep the application unchanged and make `README.md` the repository entry point. The document will summarize product status, implemented website features, contributor workflows, and production constraints while delegating detailed web-app documentation to `web/README.md`.
+
+**Tech Stack:** Markdown documentation for an Astro 7, Tailwind CSS 4, TypeScript 6, Bun, and Playwright project.
+
+## Global Constraints
+
+- Write the README in English to match the site, source code, and existing technical documentation.
+- Describe Ultra Agentic as an open roadmap catalog, not a released agent framework.
+- State that all current catalog entries are planned specifications without published source artifacts.
+- Do not claim production readiness, released downloads, adoption metrics, measured performance, pricing, or a live deployment.
+- Document only commands that exist in `web/package.json`.
+- Do not modify application code, dependencies, catalog data, or generated output.
+- Do not create a Git commit unless the user explicitly requests one.
+
+---
+
+### Task 1: Replace and verify the root README
+
+**Files:**
+- Modify: `README.md:1-5`
+- Reference: `web/README.md`
+- Reference: `web/package.json`
+- Reference: `web/src/config/site.ts`
+- Reference: `web/src/content/catalog/*.md`
+
+**Interfaces:**
+- Consumes: product metadata, package scripts, catalog maturity values, and repository funding configuration.
+- Produces: a root-level project overview and contributor quick-start document.
+
+- [ ] **Step 1: Replace the placeholder with the approved README**
+
+Use this complete content:
+
+````markdown
 # Ultra Agentic
 
 > Composable tools for capable agents.
@@ -14,7 +54,7 @@ Ultra Agentic is in an early, specification-first stage. Every catalog entry is 
 - Search and filters for catalog type and maturity.
 - Detail pages covering capabilities, compatibility, tags, and release status.
 - Guidance for evaluating planned catalog entries.
-- Public project [principles and catalog policy](web/src/pages/about.astro), plus [sponsorship information](web/src/pages/sponsors.astro).
+- Public project principles, catalog policy, and sponsorship information.
 - Structured metadata, accessible navigation, responsive layouts, and a custom 404 page.
 
 ## Technology
@@ -92,8 +132,31 @@ Keep maturity and source fields accurate:
 
 ## Production deployment
 
-`web/src/config/site.ts` currently leaves `siteUrl` as `null`; therefore, canonical and absolute social-image URLs are omitted. A sitemap and `robots.txt` are not currently generated. Before public deployment, configure a confirmed HTTPS origin, add the required discovery files, update the related build-output expectations, and run `bun run verify`.
+The site currently has no configured production origin. `web/src/config/site.ts` leaves `siteUrl` as `null`, so canonical URLs, absolute social-image URLs, the sitemap, and `robots.txt` remain disabled. Set a confirmed HTTPS origin before deploying publicly, then run `bun run verify`.
 
 ## Sponsorship
 
 Ultra Agentic is supported through [GitHub Sponsors](https://github.com/sponsors/deirs). Sponsorship supports catalog development and future artifact implementation; it does not unlock private catalog content or imply that planned artifacts are already available.
+````
+
+- [ ] **Step 2: Check documented claims and commands**
+
+Run:
+
+```bash
+rg -n "framework for building|ready-to-use|production-ready|2,000\\+|\\$50,000" README.md
+bun -e "const p = await Bun.file('web/package.json').json(); const required = ['dev','build','preview','astro','test','test:dist','test:e2e','verify']; if (required.some((name) => !p.scripts[name])) process.exit(1); console.log('README command scripts exist')"
+```
+
+Expected: the first command prints no matches; the second prints `README command scripts exist`.
+
+- [ ] **Step 3: Verify Markdown hygiene and review the final diff**
+
+Run:
+
+```bash
+git diff --check -- README.md
+git diff -- README.md
+```
+
+Expected: `git diff --check` prints no errors, and the diff contains only the intended README replacement.
