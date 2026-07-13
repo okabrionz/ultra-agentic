@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 
 import { siteConfig } from '../config/site';
 import {
+  buildBlogPostStructuredData,
   buildCatalogEntryStructuredData,
   buildOrganizationStructuredData,
 	buildPageMetadata,
@@ -162,6 +163,60 @@ describe('buildCatalogEntryStructuredData', () => {
       downloadUrl: '/downloads/repository-operations-mcp-0.1.0.zip'
     });
     expect(structuredData).not.toHaveProperty('url');
+  });
+});
+
+describe('buildBlogPostStructuredData', () => {
+  test('emits BlogPosting without inventing a site URL', () => {
+    const structuredData = buildBlogPostStructuredData(
+      {
+        title: 'What Is an MCP Server?',
+        description: 'MCP as a bounded connection layer.',
+        pubDate: new Date('2026-06-05T00:00:00.000Z'),
+        author: 'Ultra Agentic',
+        category: 'guide',
+        tags: ['mcp', 'agents']
+      },
+      siteConfig
+    );
+
+    expect(structuredData).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: 'What Is an MCP Server?',
+      description: 'MCP as a bounded connection layer.',
+      datePublished: '2026-06-05T00:00:00.000Z',
+      author: { '@type': 'Organization', name: 'Ultra Agentic' },
+      keywords: ['mcp', 'agents'],
+      articleSection: 'Guide'
+    });
+  });
+
+  test('includes dateModified and url when provided and siteUrl is set', () => {
+    const configuredSite = {
+      ...siteConfig,
+      siteUrl: 'https://ultra-agentic.example'
+    } as const;
+
+    const structuredData = buildBlogPostStructuredData(
+      {
+        title: 'Roadmap Kickoff',
+        description: 'Why catalog-first.',
+        pubDate: new Date('2026-06-12T00:00:00.000Z'),
+        updatedDate: new Date('2026-06-20T00:00:00.000Z'),
+        author: 'Ultra Agentic',
+        category: 'roadmap',
+        tags: ['roadmap']
+      },
+      configuredSite,
+      '/blog/ultra-agentic-roadmap-kickoff/'
+    );
+
+    expect(structuredData).toMatchObject({
+      '@type': 'BlogPosting',
+      dateModified: '2026-06-20T00:00:00.000Z',
+      url: 'https://ultra-agentic.example/blog/ultra-agentic-roadmap-kickoff/'
+    });
   });
 });
 

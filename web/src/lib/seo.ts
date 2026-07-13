@@ -6,6 +6,7 @@ import {
   type CatalogRelease,
   type CatalogType
 } from './catalog';
+import { blogCategoryLabels, type BlogCategory } from './blog';
 
 type CatalogEntrySeoData = {
   title: string;
@@ -15,6 +16,16 @@ type CatalogEntrySeoData = {
   tags: readonly string[];
   source?: string;
   release?: CatalogRelease;
+};
+
+type BlogPostSeoData = {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  author: string;
+  category: BlogCategory;
+  tags: readonly string[];
 };
 
 const catalogProgrammingLanguages: Record<CatalogType, string> = {
@@ -105,6 +116,28 @@ export function buildCatalogEntryStructuredData(
     genre: catalogTypeLabels[entry.type],
     creativeWorkStatus: catalogMaturityLabels[entry.maturity],
     keywords: [...entry.tags],
+    ...(pageUrl ? { url: pageUrl } : {})
+  };
+}
+
+export function buildBlogPostStructuredData(
+  entry: BlogPostSeoData,
+  config: SiteConfig,
+  pathname?: string
+) {
+  const pageUrl =
+    config.siteUrl && pathname ? new URL(pathname, config.siteUrl).toString() : undefined;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: entry.title,
+    description: entry.description,
+    datePublished: entry.pubDate.toISOString(),
+    ...(entry.updatedDate ? { dateModified: entry.updatedDate.toISOString() } : {}),
+    author: { '@type': 'Organization', name: entry.author },
+    keywords: [...entry.tags],
+    articleSection: blogCategoryLabels[entry.category],
     ...(pageUrl ? { url: pageUrl } : {})
   };
 }

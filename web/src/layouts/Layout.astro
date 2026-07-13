@@ -17,6 +17,7 @@ interface Props {
 	noIndex?: boolean;
 	bodyClass?: string;
 	structuredData?: unknown;
+	structuredDataSchema?: string;
 }
 
 const {
@@ -29,6 +30,7 @@ const {
 	noIndex = false,
 	bodyClass,
 	structuredData,
+	structuredDataSchema = 'catalog-entry',
 } = Astro.props;
 
 const { pageTitle, languageTag, canonicalUrl, socialImageUrl } = buildPageMetadata(siteConfig, {
@@ -95,7 +97,7 @@ const pageStructuredDataJson =
 			pageStructuredDataJson && (
 				<script
 					type="application/ld+json"
-					data-schema="catalog-entry"
+					data-schema={structuredDataSchema}
 					is:inline
 					set:html={pageStructuredDataJson}
 				/>

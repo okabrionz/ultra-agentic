@@ -10,6 +10,7 @@ import {
   isSafeReleaseDownload,
   isStrictSemver
 } from './lib/catalog';
+import { blogCategories } from './lib/blog';
 
 const releaseSchema = z
   .object({
@@ -68,4 +69,18 @@ const catalog = defineCollection({
     })
 });
 
-export const collections = { catalog };
+const blog = defineCollection({
+  loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    author: z.string().min(1).default('Ultra Agentic'),
+    category: z.enum(blogCategories),
+    tags: z.array(z.string().min(1)).min(1),
+    draft: z.boolean().default(false)
+  })
+});
+
+export const collections = { catalog, blog };
