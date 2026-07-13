@@ -1,0 +1,353 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Layout from '../layouts/Layout.astro';
+import { siteConfig } from '../config/site';
+
+const tiers = [
+	{
+		name: 'Individual',
+		audience: 'Independent developers and maintainers',
+		value: 'Help fund focused implementation and documentation work.',
+		includes: ['Public supporter recognition when requested', 'Roadmap signal through public discussions', 'Progress through the same public project updates'],
+		boundary: 'No private support channel, release guarantee, or early-access promise.',
+	},
+	{
+		name: 'Startup',
+		audience: 'Teams building agent-powered products',
+		value: 'Direct funding toward shared integrations that can reduce repeated internal setup.',
+		includes: ['Roadmap input for relevant public integrations', 'Organization recognition on agreed public surfaces', 'A scoped technical context conversation when scheduled'],
+		boundary: 'Input informs prioritization; it does not guarantee delivery dates or custom implementation.',
+	},
+	{
+		name: 'Enterprise',
+		audience: 'Platform, infrastructure, and developer-experience teams',
+		value: 'Support compatibility work and maintenance around widely used developer systems.',
+		includes: ['Structured roadmap review', 'Visibility aligned with funded public work', 'Clearly scoped architecture discussion'],
+		boundary: 'Support terms, cadence, and deliverables require a written agreement before work begins.',
+	},
+	{
+		name: 'Strategic',
+		audience: 'Long-term ecosystem partners',
+		value: 'Co-fund durable public infrastructure where technical goals genuinely align.',
+		includes: ['Jointly scoped public workstream', 'Roadmap participation within agreed boundaries', 'Partner visibility tied to real funded contributions'],
+		boundary: 'No exclusivity, paywalled catalog access, or implied endorsement without explicit agreement.',
+	},
+] as const;
+---
+
+<Layout
+	title="Sponsor Open Agent Infrastructure"
+	description="Sponsor the transparent Ultra Agentic roadmap with clear tiers, boundaries, and public-access commitments."
+>
+	<SiteHeader slot="header" />
+
+	<header class="sponsor-hero section-pad">
+		<div class="site-container hero-grid">
+			<div>
+				<p class="utility-label">Sponsor open agent infrastructure</p>
+				<h1>Fund engineering time, not inflated promises.</h1>
+			</div>
+			<div class="hero-copy">
+				<p>
+					Sponsorship can turn high-value roadmap specifications into maintained public
+					tools. It buys focus, context, and agreed visibility—not fictional traction or an
+					unstated support contract.
+				</p>
+				<a href="#tiers">Compare sponsor paths ↓</a>
+			</div>
+		</div>
+	</header>
+
+	<section class="case section-pad">
+		<div class="site-container case-grid">
+			<div>
+				<p class="utility-label">The practical case</p>
+				<h2>Repeated integration work is expensive even before an agent ships.</h2>
+			</div>
+			<div class="case-points">
+				<article>
+					<span aria-hidden="true">↘</span>
+					<h3>Reduce duplicated groundwork</h3>
+					<p>Fund reusable connection and workflow patterns instead of rebuilding the same infrastructure in isolation.</p>
+				</article>
+				<article>
+					<span aria-hidden="true">◎</span>
+					<h3>Shape a public roadmap</h3>
+					<p>Bring real compatibility constraints into prioritization while keeping published catalog access open.</p>
+				</article>
+				<article>
+					<span aria-hidden="true">◇</span>
+					<h3>Earn relevant visibility</h3>
+					<p>Recognition is attached to genuine support and agreed placements—never invented audience numbers.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section id="tiers" class="tiers section-pad" aria-labelledby="tiers-heading">
+		<div class="site-container">
+			<div class="tiers-heading">
+				<p class="utility-label">Sponsorship paths</p>
+				<h2 id="tiers-heading">Choose the level of alignment, then define the terms.</h2>
+			</div>
+			<div class="tier-grid">
+				{
+					tiers.map((tier, index) => (
+						<article class:list={['tier-card', { featured: index === 2 }]}>
+							<div class="tier-index">{String(index + 1).padStart(2, '0')}</div>
+							<p class="tier-audience">{tier.audience}</p>
+							<h3>{tier.name}</h3>
+							<p class="tier-value">{tier.value}</p>
+							<h4>Potential scope</h4>
+							<ul>{tier.includes.map((item) => <li>{item}</li>)}</ul>
+							<p class="tier-boundary"><strong>Boundary:</strong> {tier.boundary}</p>
+						</article>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="contact section-pad">
+		<div class="site-container contact-panel">
+			<div>
+				<p class="utility-label">Current sponsor path</p>
+				<h2>Start with the public repository.</h2>
+				<p>
+					A dedicated checkout or sponsor profile is not configured yet. Review the roadmap,
+					then use the repository to open a transparent conversation about fit and scope.
+				</p>
+			</div>
+			<div class="contact-actions">
+				<a class="primary" href={siteConfig.links.repository}>Open the repository ↗</a>
+				<a href="/catalog/">Review catalog first</a>
+			</div>
+		</div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.sponsor-hero {
+		background: var(--color-ink);
+		color: white;
+	}
+
+	.hero-grid,
+	.case-grid {
+		display: grid;
+		grid-template-columns: 1.1fr 0.9fr;
+		align-items: end;
+		gap: clamp(2rem, 8vw, 8rem);
+	}
+
+	.sponsor-hero .utility-label {
+		color: #a9bbff;
+	}
+
+	h1 {
+		max-width: 12ch;
+		margin-top: 0.8rem;
+		font-size: var(--text-display);
+	}
+
+	.hero-copy p {
+		color: #c8d0df;
+		font-size: var(--text-lead);
+	}
+
+	.hero-copy a {
+		display: inline-block;
+		margin-top: 1.5rem;
+		color: #ffb89b;
+		font-weight: 700;
+	}
+
+	.case {
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 72%, transparent);
+	}
+
+	.case h2,
+	.tiers-heading h2,
+	.contact h2 {
+		max-width: 16ch;
+		margin-top: 0.7rem;
+		font-size: var(--text-heading);
+	}
+
+	.case-points {
+		display: grid;
+		gap: 0;
+	}
+
+	.case-points article {
+		display: grid;
+		grid-template-columns: 2rem 1fr;
+		padding-block: 1.1rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.case-points article:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.case-points article > span {
+		grid-row: 1 / 3;
+		color: var(--color-signal-strong);
+		font-family: var(--font-mono);
+	}
+
+	.case-points h3 {
+		font-size: 1.1rem;
+	}
+
+	.case-points p {
+		margin-top: 0.4rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.tiers-heading {
+		margin-bottom: 2rem;
+	}
+
+	.tier-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 0.8rem;
+	}
+
+	.tier-card {
+		position: relative;
+		display: flex;
+		min-height: 100%;
+		flex-direction: column;
+		padding: 1.25rem;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-panel);
+		background: var(--color-panel);
+	}
+
+	.tier-card.featured {
+		border-color: var(--color-cobalt);
+		box-shadow: 0.3rem 0.3rem 0 var(--color-cobalt-soft);
+	}
+
+	.tier-index {
+		color: var(--color-cobalt-strong);
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+	}
+
+	.tier-audience {
+		min-height: 2.4rem;
+		margin-top: 1.5rem;
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+
+	.tier-card h3 {
+		margin-top: 0.4rem;
+		font-size: 1.5rem;
+	}
+
+	.tier-value {
+		min-height: 6.5rem;
+		margin-top: 1rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.tier-card h4 {
+		padding-top: 1rem;
+		border-top: 1px solid var(--color-line);
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+	}
+
+	.tier-card ul {
+		display: grid;
+		gap: 0.55rem;
+		margin-block: 0.8rem 1.2rem;
+		padding-left: 1.1rem;
+		color: var(--color-muted);
+		font-size: 0.78rem;
+	}
+
+	.tier-boundary {
+		margin-top: auto;
+		padding: 0.7rem;
+		border-left: 2px solid var(--color-signal);
+		background: var(--color-signal-soft);
+		color: #71330f;
+		font-size: 0.72rem;
+	}
+
+	.contact {
+		border-top: 1px solid var(--color-line);
+	}
+
+	.contact-panel {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: end;
+		gap: 2rem;
+		padding: clamp(1.5rem, 4vw, 3rem);
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-panel);
+		background: var(--color-panel);
+		box-shadow: 0.4rem 0.4rem 0 var(--color-signal);
+	}
+
+	.contact-panel > div > p:last-child {
+		margin-top: 0.9rem;
+		color: var(--color-muted);
+	}
+
+	.contact-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+	}
+
+	.contact-actions a {
+		display: inline-flex;
+		min-height: 2.9rem;
+		align-items: center;
+		padding-inline: 0.9rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		font-size: var(--text-sm);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.contact-actions .primary {
+		background: var(--color-cobalt);
+		color: white;
+	}
+
+	@media (max-width: 68rem) {
+		.tier-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 48rem) {
+		.hero-grid,
+		.case-grid,
+		.contact-panel {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 36rem) {
+		.tier-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

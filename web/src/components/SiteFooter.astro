@@ -1,0 +1,91 @@
+---
+import { siteConfig } from '../config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="site-container footer-grid">
+		<div>
+			<p class="footer-brand">{siteConfig.brand.name}</p>
+			<p class="footer-note">
+				An open, content-driven roadmap for composable agent tools. Catalog status labels are
+				published as-is.
+			</p>
+		</div>
+		<nav aria-label="Footer navigation">
+			{
+				siteConfig.navigation.map((item) => (
+					<a href={item.href}>{item.label}</a>
+				))
+			}
+			<a href={siteConfig.links.repository}>GitHub ↗</a>
+		</nav>
+		<p class="footer-meta">© {year} Ultra Agentic<br />Built in public.</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		border-top: 1px solid var(--color-line);
+		background: var(--color-ink);
+		color: white;
+	}
+
+	.footer-grid {
+		display: grid;
+		grid-template-columns: minmax(15rem, 1.4fr) 1fr auto;
+		gap: clamp(2rem, 5vw, 5rem);
+		padding-block: 3rem;
+	}
+
+	.footer-brand {
+		font-family: var(--font-display);
+		font-size: 1.25rem;
+		font-weight: 700;
+	}
+
+	.footer-note,
+	.footer-meta {
+		margin-top: 0.7rem;
+		color: #b8c1d5;
+		font-size: var(--text-sm);
+	}
+
+	.footer-note {
+		max-width: 34rem;
+	}
+
+	.site-footer nav {
+		display: grid;
+		align-content: start;
+		gap: 0.6rem;
+	}
+
+	.site-footer nav a {
+		width: fit-content;
+		font-size: var(--text-sm);
+		text-decoration: none;
+	}
+
+	.site-footer nav a:hover {
+		color: #a9bbff;
+		text-decoration: underline;
+	}
+
+	.footer-meta {
+		margin-top: 0;
+		text-align: right;
+	}
+
+	@media (max-width: 42rem) {
+		.footer-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.footer-meta {
+			grid-column: 1 / -1;
+			text-align: left;
+		}
+	}
+</style>

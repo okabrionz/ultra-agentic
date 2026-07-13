@@ -1,0 +1,230 @@
+---
+import ConnectorMap from '../components/ConnectorMap.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SponsorCTA from '../components/SponsorCTA.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="Evaluate and Compose Agent Tools"
+	description="Learn how to evaluate and compose Ultra Agentic catalog entries without mistaking roadmap specifications for released artifacts."
+>
+	<SiteHeader slot="header" />
+
+	<header class="page-hero section-pad">
+		<div class="site-container intro">
+			<p class="utility-label">Get started / read before adoption</p>
+			<h1>Compose from evidence, not assumptions.</h1>
+			<p>
+				Ultra Agentic is currently a public roadmap catalog. Use each entry to understand
+				intended scope, then verify maturity, compatibility, and source availability before
+				building around it.
+			</p>
+		</div>
+	</header>
+
+	<section class="steps section-pad">
+		<div class="site-container steps-grid">
+			<div>
+				<p class="utility-label">Evaluation path</p>
+				<h2>Four checks before you adopt an entry</h2>
+			</div>
+			<ol>
+				<li>
+					<span>01</span>
+					<div>
+						<h3>Choose the layer</h3>
+						<p>MCPs connect systems, skills define procedures, and datasets supply structured context or evaluation material.</p>
+					</div>
+				</li>
+				<li>
+					<span>02</span>
+					<div>
+						<h3>Read the maturity badge</h3>
+						<p>Planned is a specification. Beta requires validation. Stable still requires compatibility review for your environment.</p>
+					</div>
+				</li>
+				<li>
+					<span>03</span>
+					<div>
+						<h3>Confirm the boundary</h3>
+						<p>Compare declared capabilities and compatibility notes with the exact workflow and permissions your agent needs.</p>
+					</div>
+				</li>
+				<li>
+					<span>04</span>
+					<div>
+						<h3>Inspect source when available</h3>
+						<p>A missing source action means no artifact URL is published. Do not infer a package, endpoint, or release.</p>
+					</div>
+				</li>
+			</ol>
+		</div>
+	</section>
+
+	<section class="map-block section-pad">
+		<div class="site-container">
+			<ConnectorMap />
+		</div>
+	</section>
+
+	<section class="decision section-pad">
+		<div class="site-container">
+			<div class="decision-heading">
+				<p class="utility-label">Pick your next action</p>
+				<h2>Public discovery first. Support is optional.</h2>
+			</div>
+			<div class="decision-grid">
+				<article class="surface-panel">
+					<p class="utility-label">I am evaluating</p>
+					<h3>Browse the catalog</h3>
+					<p>Compare every entry without an account, payment, or private access gate.</p>
+					<a href="/catalog/">Open catalog →</a>
+				</article>
+				<article class="surface-panel">
+					<p class="utility-label">I want to contribute</p>
+					<h3>Follow the repository</h3>
+					<p>Review the public roadmap and future source artifacts where they are published.</p>
+					<a href="https://github.com/deirs/ultra-agentic">View GitHub ↗</a>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta-section section-pad">
+		<div class="site-container"><SponsorCTA compact /></div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.page-hero,
+	.map-block {
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 70%, transparent);
+	}
+
+	.intro {
+		display: grid;
+		grid-template-columns: 1.2fr 0.8fr;
+		align-items: end;
+		gap: 2rem;
+	}
+
+	.intro .utility-label,
+	.intro h1 {
+		grid-column: 1;
+	}
+
+	h1 {
+		max-width: 12ch;
+		margin-top: -1rem;
+		font-size: var(--text-display);
+	}
+
+	.intro > p:last-child {
+		grid-column: 2;
+		grid-row: 1 / 3;
+		align-self: end;
+		color: var(--color-muted);
+		font-size: var(--text-lead);
+	}
+
+	.steps-grid {
+		display: grid;
+		grid-template-columns: 0.65fr 1.35fr;
+		gap: clamp(2rem, 8vw, 8rem);
+	}
+
+	.steps h2,
+	.decision h2 {
+		max-width: 14ch;
+		margin-top: 0.7rem;
+		font-size: var(--text-heading);
+	}
+
+	.steps ol {
+		padding: 0;
+		list-style: none;
+	}
+
+	.steps li {
+		display: grid;
+		grid-template-columns: 3rem 1fr;
+		gap: 1rem;
+		padding-block: 1.4rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.steps li:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.steps li > span {
+		color: var(--color-cobalt-strong);
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+	}
+
+	.steps h3,
+	.decision h3 {
+		font-size: 1.2rem;
+	}
+
+	.steps li p,
+	.decision article > p:not(.utility-label) {
+		margin-top: 0.5rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.decision-heading {
+		margin-bottom: 1.5rem;
+	}
+
+	.decision-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+	}
+
+	.decision article {
+		padding: clamp(1.3rem, 2.5vw, 2.2rem);
+	}
+
+	.decision h3 {
+		margin-top: 0.65rem;
+	}
+
+	.decision article a {
+		display: inline-block;
+		margin-top: 1.2rem;
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+	}
+
+	.cta-section {
+		border-top: 1px solid var(--color-line);
+	}
+
+	@media (max-width: 48rem) {
+		.intro,
+		.steps-grid,
+		.decision-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.intro .utility-label,
+		.intro h1,
+		.intro > p:last-child {
+			grid-column: auto;
+			grid-row: auto;
+		}
+
+		h1 {
+			margin-top: 0.5rem;
+		}
+	}
+</style>

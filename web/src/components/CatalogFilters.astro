@@ -1,0 +1,180 @@
+---
+import { catalogMaturities, catalogMaturityLabels, catalogTypeLabels, catalogTypes } from '../lib/catalog';
+---
+
+<form class="catalog-filters surface-panel" data-catalog-filters>
+	<div class="search-field">
+		<label for="catalog-search">Search the catalog</label>
+		<input
+			id="catalog-search"
+			name="query"
+			type="search"
+			placeholder="Search capabilities, tags, compatibility…"
+			autocomplete="off"
+			aria-controls="catalog-results"
+		/>
+	</div>
+
+	<div class="select-field">
+		<label for="catalog-type">Tool type</label>
+		<select id="catalog-type" name="type" aria-controls="catalog-results">
+			<option value="all">All types</option>
+			{catalogTypes.map((type) => <option value={type}>{catalogTypeLabels[type]}</option>)}
+		</select>
+	</div>
+
+	<div class="select-field">
+		<label for="catalog-maturity">Maturity</label>
+		<select id="catalog-maturity" name="maturity" aria-controls="catalog-results">
+			<option value="all">All states</option>
+			{
+				catalogMaturities.map((maturity) => (
+					<option value={maturity}>{catalogMaturityLabels[maturity]}</option>
+				))
+			}
+		</select>
+	</div>
+
+	<button type="reset">Reset filters</button>
+</form>
+
+<script>
+	import {
+		filterCatalogEntries,
+		type CatalogMaturity,
+		type CatalogType,
+	} from '../lib/catalog';
+
+	document.querySelectorAll<HTMLElement>('[data-catalog]').forEach((catalog) => {
+		const form = catalog.querySelector<HTMLFormElement>('[data-catalog-filters]');
+		if (!form) return;
+
+		const search = form.elements.namedItem('query') as HTMLInputElement;
+		const type = form.elements.namedItem('type') as HTMLSelectElement;
+		const maturity = form.elements.namedItem('maturity') as HTMLSelectElement;
+		const items = Array.from(catalog.querySelectorAll<HTMLElement>('[data-catalog-item]'));
+		const count = catalog.querySelector<HTMLElement>('[data-results-count]');
+		const emptyState = catalog.querySelector<HTMLElement>('[data-no-results]');
+		const emptyReset = catalog.querySelector<HTMLButtonElement>('[data-reset-catalog]');
+
+		const entries = items.map((element) => ({
+			element,
+			data: {
+				title: element.dataset.search ?? '',
+				type: element.dataset.type as CatalogType,
+				maturity: element.dataset.maturity as CatalogMaturity,
+				summary: '',
+				capabilities: [],
+				compatibility: [],
+				tags: [],
+			},
+		}));
+
+		const update = () => {
+			const visibleEntries = filterCatalogEntries(entries, {
+				query: search.value,
+				type: type.value as CatalogType | 'all',
+				maturity: maturity.value as CatalogMaturity | 'all',
+			});
+			const visibleElements = new Set(visibleEntries.map((entry) => entry.element));
+
+			items.forEach((item) => {
+				item.hidden = !visibleElements.has(item);
+			});
+
+			const resultCount = visibleEntries.length;
+			if (count) {
+				count.textContent = `${resultCount} ${resultCount === 1 ? 'entry' : 'entries'} shown`;
+			}
+			if (emptyState) emptyState.hidden = resultCount !== 0;
+		};
+
+		form.addEventListener('input', update);
+		form.addEventListener('change', update);
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			update();
+		});
+		form.addEventListener('reset', () => window.setTimeout(update));
+		emptyReset?.addEventListener('click', () => {
+			form.reset();
+			update();
+			search.focus();
+		});
+	});
+</script>
+
+<style>
+	.catalog-filters {
+		display: grid;
+		grid-template-columns: minmax(14rem, 2fr) 1fr 1fr auto;
+		align-items: end;
+		gap: 0.8rem;
+		padding: 1rem;
+	}
+
+	.search-field,
+	.select-field {
+		display: grid;
+		gap: 0.35rem;
+	}
+
+	label {
+		color: var(--color-muted);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		letter-spacing: 0.04em;
+	}
+
+	input,
+	select,
+	button {
+		min-height: 2.85rem;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-control);
+		background: var(--color-panel);
+	}
+
+	input,
+	select {
+		width: 100%;
+		padding-inline: 0.75rem;
+	}
+
+	input::placeholder {
+		color: #7b8495;
+	}
+
+	button {
+		padding-inline: 0.85rem;
+		border-color: var(--color-ink);
+		font-size: var(--text-sm);
+		font-weight: 700;
+	}
+
+	button:hover {
+		background: var(--color-cobalt-soft);
+		color: var(--color-cobalt-strong);
+	}
+
+	@media (max-width: 54rem) {
+		.catalog-filters {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.search-field {
+			grid-column: 1 / -1;
+		}
+	}
+
+	@media (max-width: 34rem) {
+		.catalog-filters {
+			grid-template-columns: 1fr;
+		}
+
+		.search-field {
+			grid-column: auto;
+		}
+	}
+</style>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Ultra Agentic</title>
+  <desc id="description">A connector diagram linking MCP servers, skills, and datasets.</desc>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#2457ff" stroke-opacity=".08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#f7f8fc"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <path d="M740 180h108v135h94v135h112" fill="none" stroke="#2457ff" stroke-width="10"/>
+  <circle cx="740" cy="180" r="19" fill="#ff5c1a" stroke="#111827" stroke-width="8"/>
+  <circle cx="848" cy="315" r="19" fill="#fff" stroke="#111827" stroke-width="8"/>
+  <circle cx="942" cy="450" r="19" fill="#2457ff" stroke="#111827" stroke-width="8"/>
+  <circle cx="1054" cy="450" r="19" fill="#ff5c1a" stroke="#111827" stroke-width="8"/>
+  <text x="88" y="105" fill="#5b6475" font-family="monospace" font-size="24" letter-spacing="4">MCP / SKILL / DATASET</text>
+  <text x="82" y="278" fill="#111827" font-family="sans-serif" font-size="96" font-weight="700" letter-spacing="-5">Ultra</text>
+  <text x="82" y="376" fill="#111827" font-family="sans-serif" font-size="96" font-weight="700" letter-spacing="-5">Agentic</text>
+  <text x="88" y="470" fill="#5b6475" font-family="sans-serif" font-size="32">Composable tools for capable agents</text>
+  <rect x="84" y="536" width="260" height="10" fill="#2457ff"/>
+  <rect x="356" y="536" width="72" height="10" fill="#ff5c1a"/>
+</svg>

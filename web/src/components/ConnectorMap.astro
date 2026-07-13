@@ -1,0 +1,236 @@
+<figure class="connector-map" aria-labelledby="connector-title">
+	<figcaption>
+		<p class="utility-label">Composable by design</p>
+		<h2 id="connector-title">Give agents the right connection, procedure, and context.</h2>
+		<p>
+			The catalog separates integrations, reusable skills, and evaluation-ready data so teams
+			can adopt each layer deliberately.
+		</p>
+	</figcaption>
+
+	<div class="map-stage">
+		<svg viewBox="0 0 820 310" aria-hidden="true" focusable="false">
+			<path class="wire wire-one" d="M205 82 C310 82 292 154 410 154" />
+			<path class="wire wire-two" d="M615 82 C510 82 528 154 410 154" />
+			<path class="wire wire-three" d="M410 154 C410 217 410 217 410 256" />
+			<circle cx="410" cy="154" r="7" />
+		</svg>
+
+		<article class="map-node node-mcp">
+			<span class="node-port" aria-hidden="true"></span>
+			<p class="node-code">01 / connection</p>
+			<h3>MCP servers</h3>
+			<p>Bounded access to repositories, documentation, databases, and operational tools.</p>
+		</article>
+
+		<article class="map-node node-skill">
+			<span class="node-port" aria-hidden="true"></span>
+			<p class="node-code">02 / procedure</p>
+			<h3>Agent skills</h3>
+			<p>Reviewable instructions that turn available tools into repeatable workflows.</p>
+		</article>
+
+		<article class="map-node node-dataset">
+			<span class="node-port" aria-hidden="true"></span>
+			<p class="node-code">03 / context</p>
+			<h3>Datasets</h3>
+			<p>Structured records for retrieval, testing, and failure-focused evaluation.</p>
+		</article>
+
+		<div class="agent-core" aria-hidden="true">
+			<span>AGENT</span>
+			<small>composed runtime</small>
+		</div>
+	</div>
+</figure>
+
+<style>
+	.connector-map {
+		display: grid;
+		grid-template-columns: minmax(15rem, 0.72fr) minmax(32rem, 1.5fr);
+		align-items: center;
+		gap: clamp(2rem, 5vw, 5rem);
+	}
+
+	figcaption h2 {
+		max-width: 13ch;
+		margin-top: 0.75rem;
+		font-size: var(--text-heading);
+	}
+
+	figcaption > p:last-child {
+		margin-top: 1rem;
+		color: var(--color-muted);
+	}
+
+	.map-stage {
+		position: relative;
+		min-height: 29rem;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-panel);
+		background:
+			linear-gradient(to right, rgb(36 87 255 / 0.06) 1px, transparent 1px),
+			linear-gradient(to bottom, rgb(36 87 255 / 0.06) 1px, transparent 1px),
+			var(--color-panel);
+		background-size: 1.5rem 1.5rem;
+		box-shadow: var(--shadow-panel);
+	}
+
+	.map-stage svg {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+
+	.wire {
+		fill: none;
+		stroke: var(--color-cobalt);
+		stroke-dasharray: 8 8;
+		stroke-width: 2;
+		vector-effect: non-scaling-stroke;
+		animation: signal-flow 9s linear infinite;
+	}
+
+	.wire-two {
+		stroke: var(--color-signal);
+		animation-delay: -3s;
+	}
+
+	.wire-three {
+		animation-delay: -6s;
+	}
+
+	.map-stage svg circle {
+		fill: var(--color-panel);
+		stroke: var(--color-ink);
+		stroke-width: 2;
+	}
+
+	.map-node,
+	.agent-core {
+		position: absolute;
+		z-index: 2;
+	}
+
+	.map-node {
+		width: min(13.5rem, 31%);
+		padding: 1rem;
+		border: 1px solid var(--color-ink);
+		border-radius: 0.45rem;
+		background: var(--color-panel);
+		box-shadow: 0.26rem 0.26rem 0 var(--color-cobalt-soft);
+	}
+
+	.node-mcp {
+		top: 2.2rem;
+		left: 2rem;
+	}
+
+	.node-skill {
+		top: 2.2rem;
+		right: 2rem;
+		box-shadow: 0.26rem 0.26rem 0 var(--color-signal-soft);
+	}
+
+	.node-dataset {
+		right: 50%;
+		bottom: 1.8rem;
+		transform: translateX(50%);
+	}
+
+	.node-port {
+		position: absolute;
+		top: -0.42rem;
+		right: 0.8rem;
+		width: 0.72rem;
+		aspect-ratio: 1;
+		border: 1px solid var(--color-ink);
+		border-radius: 50%;
+		background: var(--color-signal);
+	}
+
+	.node-code {
+		color: var(--color-muted);
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
+		text-transform: uppercase;
+	}
+
+	.map-node h3 {
+		margin-top: 0.35rem;
+		font-size: 1.05rem;
+	}
+
+	.map-node p:last-child {
+		margin-top: 0.55rem;
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+
+	.agent-core {
+		top: 50%;
+		left: 50%;
+		display: grid;
+		width: 7.8rem;
+		aspect-ratio: 1.45;
+		place-content: center;
+		transform: translate(-50%, -50%);
+		border: 2px solid var(--color-ink);
+		border-radius: 50%;
+		background: var(--color-cobalt);
+		color: white;
+		text-align: center;
+		box-shadow: 0.25rem 0.25rem 0 var(--color-signal);
+	}
+
+	.agent-core span {
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.12em;
+	}
+
+	.agent-core small {
+		margin-top: 0.2rem;
+		font-size: 0.6rem;
+	}
+
+	@keyframes signal-flow {
+		to {
+			stroke-dashoffset: -128;
+		}
+	}
+
+	@media (max-width: 62rem) {
+		.connector-map {
+			grid-template-columns: 1fr;
+		}
+
+		figcaption h2 {
+			max-width: 18ch;
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.map-stage {
+			display: grid;
+			min-height: auto;
+			gap: 0.75rem;
+			padding: 1rem;
+		}
+
+		.map-stage svg,
+		.agent-core {
+			display: none;
+		}
+
+		.map-node {
+			position: relative;
+			inset: auto;
+			width: 100%;
+			transform: none;
+		}
+	}
+</style>

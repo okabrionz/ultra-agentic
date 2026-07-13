@@ -1,0 +1,288 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+import CatalogBadge from '../../components/CatalogBadge.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SponsorCTA from '../../components/SponsorCTA.astro';
+import { siteConfig } from '../../config/site';
+import Layout from '../../layouts/Layout.astro';
+import { buildCatalogEntryStructuredData } from '../../lib/seo';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('catalog');
+	return entries.map((entry) => ({
+		params: { id: entry.id },
+		props: { entry },
+	}));
+}
+
+interface Props {
+	entry: CollectionEntry<'catalog'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { data } = entry;
+const capabilityLead = data.capabilities[0].replace(/[.!?]+$/, '');
+const metaDescription = `${capabilityLead}. ${data.summary}`;
+const structuredData = buildCatalogEntryStructuredData(data, siteConfig, Astro.url.pathname);
+---
+
+<Layout
+	title={data.title}
+	description={metaDescription}
+	ogType="article"
+	structuredData={structuredData}
+>
+	<SiteHeader slot="header" />
+
+	<header class="detail-hero section-pad">
+		<div class="site-container detail-heading">
+			<div>
+				<a class="back-link" href="/catalog/">← Back to catalog</a>
+				<div class="badge-row">
+					<CatalogBadge kind="type" value={data.type} />
+					<CatalogBadge kind="maturity" value={data.maturity} />
+				</div>
+				<h1>{data.title}</h1>
+				<p>{data.summary}</p>
+			</div>
+			<aside class="truth-panel surface-panel">
+				<p class="utility-label">Published state</p>
+				<strong>{data.maturity}</strong>
+				<p>
+					{
+						data.maturity === 'planned'
+							? 'This page documents intended scope. It is not a released package, hosted service, or usage claim.'
+							: `This entry is marked ${data.maturity}. Review its source and compatibility notes before adoption.`
+					}
+				</p>
+				{
+					data.source ? (
+						<a href={data.source}>Inspect source ↗</a>
+					) : (
+						<span>No source artifact published</span>
+					)
+				}
+			</aside>
+		</div>
+	</header>
+
+	<div class="site-container detail-grid section-pad">
+		<div class="detail-main">
+			<section aria-labelledby="overview-heading">
+				<p class="utility-label">Entry notes</p>
+				<h2 id="overview-heading">Current scope</h2>
+				<div class="entry-content"><Content /></div>
+			</section>
+
+			<section aria-labelledby="capabilities-heading">
+				<p class="utility-label">Declared capabilities</p>
+				<h2 id="capabilities-heading">What this entry is designed to cover</h2>
+				<ul class="capability-list">
+					{data.capabilities.map((capability) => <li>{capability}</li>)}
+				</ul>
+			</section>
+		</div>
+
+	<aside class="detail-meta">
+			<section class="surface-panel">
+				<h2>Compatibility</h2>
+				<ul>{data.compatibility.map((item) => <li>{item}</li>)}</ul>
+			</section>
+			<section class="surface-panel">
+				<h2>Tags</h2>
+				<ul class="tags">{data.tags.map((tag) => <li>{tag}</li>)}</ul>
+			</section>
+			<p class="boundary-note">
+				Catalog access is public. Sponsorship may influence roadmap priority, but never changes
+				the meaning of this maturity label.
+			</p>
+		</aside>
+	</div>
+
+	<section class="detail-cta section-pad">
+		<div class="site-container">
+			<SponsorCTA compact />
+		</div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.detail-hero {
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 72%, transparent);
+	}
+
+	.detail-heading {
+		display: grid;
+		grid-template-columns: minmax(0, 1.3fr) minmax(17rem, 0.55fr);
+		align-items: end;
+		gap: clamp(2rem, 7vw, 7rem);
+	}
+
+	.back-link {
+		color: var(--color-cobalt-strong);
+		font-size: var(--text-sm);
+		font-weight: 700;
+	}
+
+	.badge-row {
+		display: flex;
+		gap: 0.5rem;
+		margin-top: 2rem;
+	}
+
+	h1 {
+		max-width: 14ch;
+		margin-top: 0.8rem;
+		font-size: var(--text-display);
+	}
+
+	.detail-heading > div > p {
+		margin-top: 1rem;
+		color: var(--color-muted);
+		font-size: var(--text-lead);
+	}
+
+	.truth-panel {
+		padding: 1.2rem;
+		border-top: 0.28rem solid var(--color-signal);
+	}
+
+	.truth-panel strong {
+		display: block;
+		margin-top: 0.6rem;
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		text-transform: capitalize;
+	}
+
+	.truth-panel p:not(.utility-label),
+	.truth-panel span,
+	.truth-panel a {
+		display: block;
+		margin-top: 0.75rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.truth-panel a {
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+	}
+
+	.detail-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1.25fr) minmax(15rem, 0.52fr);
+		align-items: start;
+		gap: clamp(2rem, 8vw, 8rem);
+	}
+
+	.detail-main {
+		display: grid;
+		gap: 4rem;
+	}
+
+	.detail-main h2 {
+		max-width: 18ch;
+		margin-top: 0.6rem;
+		font-size: var(--text-heading);
+	}
+
+	.entry-content {
+		margin-top: 1.2rem;
+		color: var(--color-muted);
+		font-size: var(--text-lead);
+	}
+
+	.entry-content :global(p + p) {
+		margin-top: 1rem;
+	}
+
+	.capability-list {
+		display: grid;
+		gap: 0;
+		margin-top: 1.5rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.capability-list li {
+		position: relative;
+		padding: 1rem 1rem 1rem 2.5rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.capability-list li:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.capability-list li::before {
+		position: absolute;
+		top: 1.15rem;
+		left: 0.55rem;
+		color: var(--color-signal-strong);
+		font-family: var(--font-mono);
+		content: '→';
+	}
+
+	.detail-meta {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.detail-meta section {
+		padding: 1.2rem;
+	}
+
+	.detail-meta h2 {
+		font-size: 1rem;
+	}
+
+	.detail-meta ul {
+		display: grid;
+		gap: 0.55rem;
+		margin-top: 0.8rem;
+		padding-left: 1.2rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.detail-meta .tags {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0;
+		list-style: none;
+	}
+
+	.tags li {
+		padding: 0.25rem 0.45rem;
+		border-radius: 0.25rem;
+		background: var(--color-cobalt-soft);
+		color: var(--color-cobalt-strong);
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+	}
+
+	.boundary-note {
+		padding: 0.9rem;
+		border-left: 3px solid var(--color-signal);
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.detail-cta {
+		border-top: 1px solid var(--color-line);
+	}
+
+	@media (max-width: 50rem) {
+		.detail-heading,
+		.detail-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

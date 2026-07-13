@@ -1,0 +1,132 @@
+---
+import { siteConfig } from '../config/site';
+import {
+	buildOrganizationStructuredData,
+	buildPageMetadata,
+	serializeStructuredData,
+} from '../lib/seo';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+	imageAlt?: string;
+	canonical?: string | URL;
+	ogType?: 'website' | 'article';
+	noIndex?: boolean;
+	bodyClass?: string;
+	structuredData?: unknown;
+}
+
+const {
+	title,
+	description = siteConfig.metadata.description,
+	image = siteConfig.metadata.socialImage.src,
+	imageAlt = siteConfig.metadata.socialImage.alt,
+	canonical,
+	ogType = 'website',
+	noIndex = false,
+	bodyClass,
+	structuredData,
+} = Astro.props;
+
+const { pageTitle, languageTag, canonicalUrl, socialImageUrl } = buildPageMetadata(siteConfig, {
+	title,
+	pathname: Astro.url.pathname,
+	canonical,
+	image,
+});
+const organizationJson = serializeStructuredData(buildOrganizationStructuredData(siteConfig));
+const pageStructuredDataJson =
+	structuredData === undefined ? undefined : serializeStructuredData(structuredData);
+---
+
+<!doctype html>
+<html lang={languageTag}>
+	<head>
+		<meta charset="utf-8" />
+		<title>{pageTitle}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#f7f8fc" />
+		<meta name="color-scheme" content="light" />
+		<meta name="description" content={description} />
+		{noIndex && <meta name="robots" content="noindex, nofollow" />}
+		{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+		<meta property="og:site_name" content={siteConfig.brand.name} />
+		<meta property="og:locale" content={siteConfig.metadata.locale} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+		{socialImageUrl && (
+			<meta property="og:image" content={socialImageUrl} />
+		)}
+		{socialImageUrl && (
+			<meta property="og:image:type" content={siteConfig.metadata.socialImage.mimeType} />
+		)}
+		{socialImageUrl && (
+			<meta
+				property="og:image:width"
+				content={siteConfig.metadata.socialImage.width.toString()}
+			/>
+		)}
+		{socialImageUrl && (
+			<meta
+				property="og:image:height"
+				content={siteConfig.metadata.socialImage.height.toString()}
+			/>
+		)}
+		{socialImageUrl && <meta property="og:image:alt" content={imageAlt} />}
+
+		<meta name="twitter:card" content={siteConfig.metadata.twitterCard} />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		{socialImageUrl && <meta name="twitter:image" content={socialImageUrl} />}
+		{socialImageUrl && <meta name="twitter:image:alt" content={imageAlt} />}
+		<script
+			type="application/ld+json"
+			data-schema="organization"
+			is:inline
+			set:html={organizationJson}
+		/>
+		{
+			pageStructuredDataJson && (
+				<script
+					type="application/ld+json"
+					data-schema="catalog-entry"
+					is:inline
+					set:html={pageStructuredDataJson}
+				/>
+			)
+		}
+
+		<link
+			rel="preload"
+			href="/fonts/instrument-sans-latin-wght-normal.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			href="/fonts/sora-latin-wght-normal.woff2"
+			as="font"
+			type="font/woff2"
+			crossorigin
+		/>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+	</head>
+	<body class={bodyClass}>
+		<a class="skip-link" href="#main-content">Skip to main content</a>
+		<div class="site-shell">
+			<slot name="header" />
+			<main id="main-content" tabindex="-1">
+				<slot />
+			</main>
+			<slot name="footer" />
+		</div>
+	</body>
+</html>

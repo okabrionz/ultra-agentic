@@ -1,0 +1,231 @@
+---
+import { siteConfig } from '../config/site';
+
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) =>
+	pathname === href || (href !== '/' && pathname.startsWith(href));
+---
+
+<header class="site-header">
+	<div class="site-container header-inner">
+		<a class="brand" href="/" aria-label={`${siteConfig.brand.name} home`}>
+			<span class="brand-mark" aria-hidden="true">{siteConfig.brand.shortName}</span>
+			<span class="brand-copy">
+				<strong>{siteConfig.brand.name}</strong>
+				<small>{siteConfig.brand.tagline}</small>
+			</span>
+		</a>
+
+		<nav class="desktop-nav" aria-label="Primary navigation">
+			{
+				siteConfig.navigation.map((item) => (
+					<a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+						{item.label}
+					</a>
+				))
+			}
+		</nav>
+
+		<a class="header-source" href={siteConfig.links.repository}>View source</a>
+
+		<details class="mobile-nav">
+			<summary aria-label="Toggle navigation">
+				<span aria-hidden="true"></span>
+				Menu
+			</summary>
+			<nav aria-label="Mobile navigation">
+				{
+					siteConfig.navigation.map((item) => (
+						<a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+							{item.label}
+						</a>
+					))
+				}
+				<a href={siteConfig.links.repository}>View source ↗</a>
+			</nav>
+		</details>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		position: relative;
+		z-index: 20;
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-workbench) 92%, transparent);
+		backdrop-filter: blur(14px);
+	}
+
+	.header-inner {
+		display: grid;
+		min-height: 5rem;
+		grid-template-columns: auto 1fr auto;
+		align-items: center;
+		gap: 1.5rem;
+	}
+
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.75rem;
+		text-decoration: none;
+	}
+
+	.brand-mark {
+		display: grid;
+		width: 2.45rem;
+		aspect-ratio: 1;
+		place-items: center;
+		border: 1px solid var(--color-ink);
+		border-radius: 0.35rem;
+		background: var(--color-cobalt);
+		color: white;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		box-shadow: 0.22rem 0.22rem 0 var(--color-signal);
+	}
+
+	.brand-copy {
+		display: grid;
+		line-height: 1.1;
+	}
+
+	.brand-copy strong {
+		font-family: var(--font-display);
+		font-size: 0.92rem;
+	}
+
+	.brand-copy small {
+		margin-top: 0.22rem;
+		color: var(--color-muted);
+		font-size: 0.72rem;
+	}
+
+	.desktop-nav {
+		display: flex;
+		justify-content: center;
+		gap: clamp(0.75rem, 1.7vw, 1.65rem);
+	}
+
+	.desktop-nav a,
+	.header-source {
+		font-size: var(--text-sm);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.desktop-nav a {
+		padding-block: 0.55rem;
+		border-bottom: 2px solid transparent;
+		color: var(--color-muted);
+	}
+
+	.desktop-nav a:hover,
+	.desktop-nav a[aria-current='page'] {
+		border-color: var(--color-cobalt);
+		color: var(--color-ink);
+	}
+
+	.header-source {
+		padding: 0.65rem 0.85rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		background: var(--color-panel);
+	}
+
+	.mobile-nav {
+		display: none;
+		justify-self: end;
+	}
+
+	.mobile-nav summary {
+		display: flex;
+		min-height: 2.75rem;
+		align-items: center;
+		gap: 0.55rem;
+		padding: 0.55rem 0.7rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		background: var(--color-panel);
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+		list-style: none;
+		cursor: pointer;
+	}
+
+	.mobile-nav summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.mobile-nav summary span,
+	.mobile-nav summary span::before,
+	.mobile-nav summary span::after {
+		display: block;
+		width: 1rem;
+		height: 1px;
+		background: currentColor;
+		content: '';
+	}
+
+	.mobile-nav summary span {
+		position: relative;
+	}
+
+	.mobile-nav summary span::before {
+		position: absolute;
+		transform: translateY(-0.3rem);
+	}
+
+	.mobile-nav summary span::after {
+		position: absolute;
+		transform: translateY(0.3rem);
+	}
+
+	.mobile-nav nav {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		right: var(--page-gutter);
+		left: var(--page-gutter);
+		display: grid;
+		padding: 0.65rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-panel);
+		background: var(--color-panel);
+		box-shadow: var(--shadow-panel);
+	}
+
+	.mobile-nav nav a {
+		padding: 0.8rem;
+		border-radius: var(--radius-control);
+		font-weight: 650;
+		text-decoration: none;
+	}
+
+	.mobile-nav nav a:hover,
+	.mobile-nav nav a[aria-current='page'] {
+		background: var(--color-cobalt-soft);
+		color: var(--color-cobalt-strong);
+	}
+
+	@media (max-width: 48rem) {
+		.header-inner {
+			min-height: 4.5rem;
+			grid-template-columns: 1fr auto;
+		}
+
+		.desktop-nav,
+		.header-source {
+			display: none;
+		}
+
+		.mobile-nav {
+			display: block;
+		}
+	}
+
+	@media (max-width: 25rem) {
+		.brand-copy small {
+			display: none;
+		}
+	}
+</style>

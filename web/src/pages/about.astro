@@ -1,0 +1,239 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SponsorCTA from '../components/SponsorCTA.astro';
+import Layout from '../layouts/Layout.astro';
+import { siteConfig } from '../config/site';
+---
+
+<Layout
+	title="About the Agent Infrastructure Catalog"
+	description="Learn why Ultra Agentic separates agent connections, procedures, and datasets—and how its catalog communicates roadmap truth."
+>
+	<SiteHeader slot="header" />
+
+	<header class="page-hero section-pad">
+		<div class="site-container hero-grid">
+			<div>
+				<p class="utility-label">About Ultra Agentic</p>
+				<h1>A workbench for agent infrastructure that can be inspected.</h1>
+			</div>
+			<p>
+				The project’s premise is simple: agent systems become easier to reason about when
+				connections, procedures, and data remain composable—and when roadmap language never
+				pretends to be release evidence.
+			</p>
+		</div>
+	</header>
+
+	<section class="principles section-pad">
+		<div class="site-container principles-grid">
+			<div>
+				<p class="utility-label">Working principles</p>
+				<h2>Clarity at every boundary.</h2>
+			</div>
+			<div class="principle-list">
+				<article>
+					<span>01</span>
+					<div><h3>Separate access from procedure</h3><p>MCP servers expose bounded capabilities. Skills describe how an agent should use available capabilities.</p></div>
+				</article>
+				<article>
+					<span>02</span>
+					<div><h3>Keep evaluation material explicit</h3><p>Datasets are independent catalog entries with their own provenance, format, and maturity expectations.</p></div>
+				</article>
+				<article>
+					<span>03</span>
+					<div><h3>Publish limits before claims</h3><p>Compatibility and maturity are visible before any source action or sponsorship path.</p></div>
+				</article>
+				<article>
+					<span>04</span>
+					<div><h3>Keep discovery public</h3><p>The catalog does not require authentication, payment, or sponsor status.</p></div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section id="catalog-policy" class="policy section-pad" aria-labelledby="policy-heading">
+		<div class="site-container policy-grid">
+			<div class="policy-heading">
+				<p class="utility-label">Catalog policy</p>
+				<h2 id="policy-heading">What the status labels mean</h2>
+				<p>These labels describe artifact maturity, not popularity, business traction, or suitability for a specific production system.</p>
+			</div>
+			<dl>
+				<div>
+					<dt><span class="dot planned"></span>Planned</dt>
+					<dd>A documented concept or intended scope. No downloadable artifact, hosted endpoint, or tested behavior should be inferred.</dd>
+				</div>
+				<div>
+					<dt><span class="dot beta"></span>Beta</dt>
+					<dd>An artifact may be available, but interfaces or compatibility can change. Validate source, version, and limits directly.</dd>
+				</div>
+				<div>
+					<dt><span class="dot stable"></span>Stable</dt>
+					<dd>A maintained release contract is intended. Teams still need to review source, security, compatibility, and operational fit.</dd>
+				</div>
+			</dl>
+		</div>
+	</section>
+
+	<section class="state section-pad">
+		<div class="site-container state-panel surface-panel">
+			<div>
+				<p class="utility-label">Project state / July 2026</p>
+				<h2>The catalog is populated. The source roadmap is at an early stage.</h2>
+			</div>
+			<div>
+				<p>
+					Current entries are intentionally marked planned because published implementation
+					evidence does not yet exist. The content collection is the launch source of truth
+					and is designed to preserve route contracts if GitHub synchronization is added later.
+				</p>
+				<a href={siteConfig.links.repository}>Inspect the repository ↗</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="cta-section section-pad">
+		<div class="site-container"><SponsorCTA compact /></div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.page-hero,
+	.policy {
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 70%, transparent);
+	}
+
+	.hero-grid,
+	.principles-grid,
+	.policy-grid,
+	.state-panel {
+		display: grid;
+		grid-template-columns: 0.8fr 1.2fr;
+		gap: clamp(2rem, 8vw, 8rem);
+	}
+
+	.hero-grid {
+		align-items: end;
+	}
+
+	h1 {
+		max-width: 14ch;
+		margin-top: 0.8rem;
+		font-size: var(--text-display);
+	}
+
+	.hero-grid > p {
+		color: var(--color-muted);
+		font-size: var(--text-lead);
+	}
+
+	.principles h2,
+	.policy h2,
+	.state h2 {
+		max-width: 15ch;
+		margin-top: 0.65rem;
+		font-size: var(--text-heading);
+	}
+
+	.principle-list article {
+		display: grid;
+		grid-template-columns: 3rem 1fr;
+		gap: 1rem;
+		padding-block: 1.25rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.principle-list article:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.principle-list article > span {
+		color: var(--color-cobalt-strong);
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+	}
+
+	.principle-list h3 {
+		font-size: 1.15rem;
+	}
+
+	.principle-list p,
+	.policy-heading > p:last-child,
+	.state-panel p {
+		margin-top: 0.45rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.policy dl {
+		margin: 0;
+	}
+
+	.policy dl > div {
+		padding-block: 1.25rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.policy dl > div:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.policy dt {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		font-family: var(--font-display);
+		font-weight: 700;
+	}
+
+	.policy dd {
+		margin: 0.45rem 0 0 1.05rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.dot {
+		width: 0.5rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: #667085;
+	}
+
+	.dot.beta {
+		background: #b35a0d;
+	}
+
+	.dot.stable {
+		background: #168051;
+	}
+
+	.state-panel {
+		align-items: end;
+		padding: clamp(1.5rem, 4vw, 3rem);
+	}
+
+	.state-panel a {
+		display: inline-block;
+		margin-top: 1rem;
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+	}
+
+	.cta-section {
+		border-top: 1px solid var(--color-line);
+	}
+
+	@media (max-width: 48rem) {
+		.hero-grid,
+		.principles-grid,
+		.policy-grid,
+		.state-panel {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

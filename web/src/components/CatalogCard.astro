@@ -1,0 +1,169 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import CatalogBadge from './CatalogBadge.astro';
+
+interface Props {
+	entry: CollectionEntry<'catalog'>;
+	compact?: boolean;
+}
+
+const { entry, compact = false } = Astro.props;
+const { data } = entry;
+const searchText = [
+	data.title,
+	data.summary,
+	...data.capabilities,
+	...data.compatibility,
+	...data.tags,
+].join(' ');
+---
+
+<article
+	class:list={['catalog-card', { compact }]}
+	data-catalog-item
+	data-type={data.type}
+	data-maturity={data.maturity}
+	data-search={searchText}
+>
+	<div class="card-topline">
+		<CatalogBadge kind="type" value={data.type} />
+		<CatalogBadge kind="maturity" value={data.maturity} />
+	</div>
+
+	<div class="card-copy">
+		<h3><a href={`/catalog/${entry.id}/`}>{data.title}</a></h3>
+		<p>{data.summary}</p>
+	</div>
+
+	<ul class="tag-list" aria-label="Tags">
+		{data.tags.slice(0, compact ? 2 : 3).map((tag) => <li>{tag}</li>)}
+	</ul>
+
+	<div class="card-actions">
+		<span class="details-link" aria-hidden="true">
+			View details <span aria-hidden="true">→</span>
+		</span>
+		{
+			data.source && (
+				<a class="source-link" href={data.source}>
+					Source <span aria-hidden="true">↗</span>
+				</a>
+			)
+		}
+	</div>
+</article>
+
+<style>
+	.catalog-card {
+		position: relative;
+		display: grid;
+		min-height: 100%;
+		grid-template-rows: auto 1fr auto auto;
+		gap: 1.25rem;
+		padding: clamp(1.25rem, 1rem + 1vw, 1.8rem);
+		overflow: hidden;
+		border: 1px solid var(--color-line);
+		border-radius: var(--radius-panel);
+		background: var(--color-panel);
+		box-shadow: 0 1px 0 rgb(17 24 39 / 0.04);
+		transition:
+			transform 180ms var(--ease-workbench),
+			border-color 180ms var(--ease-workbench),
+			box-shadow 180ms var(--ease-workbench);
+	}
+
+	.catalog-card::before {
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: 0.22rem;
+		background: var(--color-cobalt);
+		content: '';
+		transform: scaleY(0);
+		transform-origin: bottom;
+		transition: transform 180ms var(--ease-workbench);
+	}
+
+	.catalog-card:hover {
+		transform: translateY(-0.2rem);
+		border-color: color-mix(in srgb, var(--color-cobalt) 48%, var(--color-line));
+		box-shadow: var(--shadow-panel);
+	}
+
+	.catalog-card:hover::before {
+		transform: scaleY(1);
+	}
+
+	.card-topline,
+	.card-actions {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.6rem;
+	}
+
+	.card-copy h3 {
+		font-size: clamp(1.25rem, 1.1rem + 0.45vw, 1.55rem);
+	}
+
+	.card-copy h3 a {
+		text-decoration: none;
+	}
+
+	.card-copy h3 a::after {
+		position: absolute;
+		inset: 0;
+		content: '';
+	}
+
+	.card-copy p {
+		margin-top: 0.75rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	.tag-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.tag-list li {
+		padding: 0.18rem 0.42rem;
+		border-radius: 0.25rem;
+		background: var(--color-cobalt-soft);
+		color: var(--color-cobalt-strong);
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+	}
+
+	.card-actions {
+		position: relative;
+		z-index: 1;
+		padding-top: 1rem;
+		border-top: 1px solid var(--color-line);
+		font-size: var(--text-sm);
+	}
+
+	.details-link {
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.source-link {
+		color: var(--color-muted);
+	}
+
+	.compact {
+		gap: 1rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.catalog-card:hover {
+			transform: none;
+		}
+	}
+</style>

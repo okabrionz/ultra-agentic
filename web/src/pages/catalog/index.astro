@@ -1,0 +1,175 @@
+---
+import { getCollection } from 'astro:content';
+
+import CatalogCard from '../../components/CatalogCard.astro';
+import CatalogFilters from '../../components/CatalogFilters.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import SponsorCTA from '../../components/SponsorCTA.astro';
+import Layout from '../../layouts/Layout.astro';
+import { sortCatalogEntries } from '../../lib/catalog';
+
+const entries = sortCatalogEntries(await getCollection('catalog'));
+---
+
+<Layout
+	title="Agent Tool Catalog"
+	description="Browse the transparent Ultra Agentic roadmap of MCP servers, agent skills, and datasets."
+>
+	<SiteHeader slot="header" />
+
+	<div data-catalog>
+		<header class="page-hero section-pad">
+			<div class="site-container hero-grid">
+				<div>
+					<p class="utility-label">Public catalog / honest states</p>
+					<h1>Find the right layer for your agent workflow.</h1>
+				</div>
+				<p>
+					Search roadmap entries by capability, compatibility, type, or maturity. Planned
+					means specified—not shipped. Source links only appear when an artifact URL is
+					published.
+				</p>
+			</div>
+		</header>
+
+		<section class="catalog-section">
+			<div class="site-container">
+				<CatalogFilters />
+				<div class="results-heading">
+					<h2>Catalog entries</h2>
+					<p data-results-count role="status" aria-atomic="true">
+						{entries.length} entries shown
+					</p>
+				</div>
+				<div id="catalog-results" class="catalog-grid">
+					{entries.map((entry) => <CatalogCard entry={entry} />)}
+				</div>
+				<div
+					class="no-results surface-panel"
+					data-no-results
+					role="region"
+					aria-labelledby="no-results-heading"
+					hidden
+				>
+					<p class="utility-label">No matching entries</p>
+					<h2 id="no-results-heading">Try a broader search.</h2>
+					<p>Clear one or more filters to return to the full public catalog.</p>
+					<button type="button" data-reset-catalog>Reset all filters</button>
+				</div>
+			</div>
+		</section>
+
+		<section class="sponsor-section section-pad">
+			<div class="site-container">
+				<SponsorCTA
+					compact
+					eyebrow="Need a missing integration?"
+					title="Sponsor roadmap input without locking up public access."
+					description="Sponsors can help prioritize engineering work. Publication, timing, and support remain bounded by the tier terms—never implied by a catalog entry."
+				/>
+			</div>
+		</section>
+	</div>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.page-hero {
+		border-bottom: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 68%, transparent);
+	}
+
+	.hero-grid {
+		display: grid;
+		grid-template-columns: 1.25fr 0.75fr;
+		align-items: end;
+		gap: clamp(2rem, 6vw, 6rem);
+	}
+
+	h1 {
+		max-width: 13ch;
+		margin-top: 0.8rem;
+		font-size: var(--text-display);
+	}
+
+	.hero-grid > p {
+		color: var(--color-muted);
+	}
+
+	.catalog-section {
+		padding-block: clamp(2rem, 1.3rem + 3vw, 4rem);
+	}
+
+	.results-heading {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-block: 2.5rem 1rem;
+	}
+
+	.results-heading h2 {
+		font-size: 1.35rem;
+	}
+
+	.results-heading p {
+		color: var(--color-muted);
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+	}
+
+	.catalog-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.catalog-grid > :global([hidden]) {
+		display: none;
+	}
+
+	.no-results {
+		padding: clamp(2rem, 5vw, 4rem);
+		text-align: center;
+	}
+
+	.no-results[hidden] {
+		display: none;
+	}
+
+	.no-results h2 {
+		margin-top: 0.5rem;
+		font-size: var(--text-heading);
+	}
+
+	.no-results > p:not(.utility-label) {
+		margin: 0.8rem auto 0;
+		color: var(--color-muted);
+	}
+
+	.no-results button {
+		min-height: 2.9rem;
+		margin-top: 1.4rem;
+		padding-inline: 1rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		background: var(--color-cobalt);
+		color: white;
+		font-weight: 700;
+	}
+
+	@media (max-width: 62rem) {
+		.catalog-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 46rem) {
+		.hero-grid,
+		.catalog-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

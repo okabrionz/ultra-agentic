@@ -1,0 +1,351 @@
+---
+import { getCollection } from 'astro:content';
+
+import CatalogCard from '../components/CatalogCard.astro';
+import ConnectorMap from '../components/ConnectorMap.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SponsorCTA from '../components/SponsorCTA.astro';
+import Layout from '../layouts/Layout.astro';
+import { sortCatalogEntries } from '../lib/catalog';
+
+const entries = sortCatalogEntries(await getCollection('catalog'));
+const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 4);
+---
+
+<Layout>
+	<SiteHeader slot="header" />
+
+	<section class="hero section-pad">
+		<div class="site-container hero-grid">
+			<div class="hero-copy">
+				<p class="utility-label">Open agent infrastructure / launch roadmap</p>
+				<h1>Build capable agents from <span>clear, composable parts.</span></h1>
+				<p class="hero-lead">
+					Ultra Agentic is a transparent catalog of MCP servers, reusable skills, and
+					structured datasets for developer-agent workflows.
+				</p>
+				<div class="hero-actions">
+					<a class="action-primary" href="/catalog/">Explore the catalog</a>
+					<a class="action-secondary" href="/get-started/">Understand the model</a>
+				</div>
+			</div>
+
+			<aside class="launch-state surface-panel" aria-label="Launch status">
+				<div class="state-header">
+					<span class="live-dot" aria-hidden="true"></span>
+					<span>Catalog state</span>
+					<strong>ROADMAP</strong>
+				</div>
+				<dl>
+					<div><dt>{entries.length}</dt><dd>specified entries</dd></div>
+					<div><dt>3</dt><dd>composable layers</dd></div>
+					<div><dt>0</dt><dd>fabricated claims</dd></div>
+				</dl>
+				<p>
+					Every entry publishes a maturity label. Planned entries are specifications—not
+					downloads or evidence of production use.
+				</p>
+				<a href="/about/#catalog-policy">Read the catalog policy →</a>
+			</aside>
+		</div>
+	</section>
+
+	<section class="map-section section-pad">
+		<div class="site-container">
+			<ConnectorMap />
+		</div>
+	</section>
+
+	<section class="featured section-pad">
+		<div class="site-container">
+			<div class="section-heading">
+				<div>
+					<p class="utility-label">Featured specifications</p>
+					<h2>Start with the workflows teams rebuild most.</h2>
+				</div>
+				<a href="/catalog/">View all entries <span aria-hidden="true">→</span></a>
+			</div>
+			<div class="catalog-grid">
+				{featuredEntries.map((entry) => <CatalogCard entry={entry} compact />)}
+			</div>
+		</div>
+	</section>
+
+	<section class="outcomes section-pad">
+		<div class="site-container outcomes-grid">
+			<div class="outcomes-heading">
+				<p class="utility-label">Developer outcomes</p>
+				<h2>Spend less time rebuilding connective tissue.</h2>
+				<p>
+					The roadmap prioritizes inspectable boundaries and reusable procedures. These are
+					design goals for planned work, not measured performance claims.
+				</p>
+			</div>
+			<ol>
+				<li>
+					<span>01</span>
+					<div><h3>Discover deliberately</h3><p>Compare type, compatibility, and maturity before choosing an integration path.</p></div>
+				</li>
+				<li>
+					<span>02</span>
+					<div><h3>Compose visibly</h3><p>Keep tool access, workflow instructions, and evaluation data as distinct layers.</p></div>
+				</li>
+				<li>
+					<span>03</span>
+					<div><h3>Review before trust</h3><p>Follow source links when available and treat every maturity label as a constraint.</p></div>
+				</li>
+			</ol>
+		</div>
+	</section>
+
+	<section class="sponsor-section section-pad">
+		<div class="site-container">
+			<SponsorCTA />
+		</div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.hero {
+		position: relative;
+	}
+
+	.hero::after {
+		position: absolute;
+		top: 0;
+		right: -8rem;
+		width: 24rem;
+		aspect-ratio: 1;
+		border: 1px solid rgb(36 87 255 / 0.12);
+		border-radius: 50%;
+		box-shadow:
+			0 0 0 4rem rgb(36 87 255 / 0.035),
+			0 0 0 8rem rgb(36 87 255 / 0.025);
+		content: '';
+		pointer-events: none;
+	}
+
+	.hero-grid {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		grid-template-columns: minmax(0, 1.55fr) minmax(17rem, 0.7fr);
+		align-items: end;
+		gap: clamp(2rem, 6vw, 6rem);
+	}
+
+	h1 {
+		max-width: 12ch;
+		margin-top: 1rem;
+		font-size: var(--text-display);
+	}
+
+	h1 span {
+		color: var(--color-cobalt);
+	}
+
+	.hero-lead {
+		margin-top: 1.5rem;
+		color: var(--color-muted);
+		font-size: var(--text-lead);
+	}
+
+	.hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.7rem;
+		margin-top: 2rem;
+	}
+
+	.hero-actions a {
+		display: inline-flex;
+		min-height: 3.15rem;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.action-primary {
+		background: var(--color-cobalt);
+		color: white;
+		box-shadow: 0.22rem 0.22rem 0 var(--color-signal);
+	}
+
+	.action-primary:hover {
+		background: var(--color-cobalt-strong);
+	}
+
+	.action-secondary {
+		background: var(--color-panel);
+	}
+
+	.launch-state {
+		padding: 1.2rem;
+	}
+
+	.state-header {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding-bottom: 0.9rem;
+		border-bottom: 1px solid var(--color-line);
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+	}
+
+	.state-header strong {
+		margin-left: auto;
+		color: var(--color-signal-strong);
+	}
+
+	.live-dot {
+		width: 0.5rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--color-signal);
+	}
+
+	.launch-state dl {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.5rem;
+		padding-block: 1.2rem;
+	}
+
+	.launch-state dt {
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-weight: 700;
+	}
+
+	.launch-state dd,
+	.launch-state p,
+	.launch-state a {
+		color: var(--color-muted);
+		font-size: 0.75rem;
+	}
+
+	.launch-state dd {
+		margin: 0;
+	}
+
+	.launch-state a {
+		display: inline-block;
+		margin-top: 1rem;
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+	}
+
+	.map-section,
+	.outcomes {
+		border-block: 1px solid var(--color-line);
+		background: color-mix(in srgb, var(--color-panel) 72%, transparent);
+	}
+
+	.section-heading {
+		display: flex;
+		align-items: end;
+		justify-content: space-between;
+		gap: 2rem;
+		margin-bottom: 2rem;
+	}
+
+	.section-heading h2,
+	.outcomes-heading h2 {
+		max-width: 17ch;
+		margin-top: 0.7rem;
+		font-size: var(--text-heading);
+	}
+
+	.section-heading > a {
+		color: var(--color-cobalt-strong);
+		font-weight: 700;
+	}
+
+	.catalog-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.outcomes-grid {
+		display: grid;
+		grid-template-columns: 0.8fr 1.2fr;
+		gap: clamp(2rem, 7vw, 7rem);
+	}
+
+	.outcomes-heading > p:last-child {
+		margin-top: 1rem;
+		color: var(--color-muted);
+	}
+
+	.outcomes ol {
+		display: grid;
+		gap: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.outcomes li {
+		display: grid;
+		grid-template-columns: 2.5rem 1fr;
+		gap: 1rem;
+		padding-block: 1.3rem;
+		border-top: 1px solid var(--color-line);
+	}
+
+	.outcomes li:last-child {
+		border-bottom: 1px solid var(--color-line);
+	}
+
+	.outcomes li > span {
+		color: var(--color-signal-strong);
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+	}
+
+	.outcomes h3 {
+		font-size: 1.15rem;
+	}
+
+	.outcomes li p {
+		margin-top: 0.45rem;
+		color: var(--color-muted);
+		font-size: var(--text-sm);
+	}
+
+	@media (max-width: 65rem) {
+		.catalog-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 52rem) {
+		.hero-grid,
+		.outcomes-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.launch-state {
+			max-width: 34rem;
+		}
+	}
+
+	@media (max-width: 36rem) {
+		.catalog-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.section-heading {
+			align-items: start;
+			flex-direction: column;
+		}
+	}
+</style>

@@ -1,0 +1,70 @@
+---
+import {
+	catalogMaturityLabels,
+	catalogTypeLabels,
+	type CatalogMaturity,
+	type CatalogType,
+} from '../lib/catalog';
+
+type Props =
+	| { kind: 'type'; value: CatalogType }
+	| { kind: 'maturity'; value: CatalogMaturity };
+
+const { kind, value } = Astro.props;
+const label =
+	kind === 'type'
+		? catalogTypeLabels[value as CatalogType]
+		: catalogMaturityLabels[value as CatalogMaturity];
+---
+
+<span class:list={['catalog-badge', `badge-${kind}`, `badge-${value}`]}>
+	{kind === 'maturity' && <span class="status-dot" aria-hidden="true"></span>}
+	{label}
+</span>
+
+<style>
+	.catalog-badge {
+		display: inline-flex;
+		width: fit-content;
+		align-items: center;
+		gap: 0.38rem;
+		padding: 0.28rem 0.5rem;
+		border: 1px solid var(--color-line);
+		border-radius: 999px;
+		background: var(--color-panel);
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.055em;
+		line-height: 1;
+		text-transform: uppercase;
+	}
+
+	.badge-type {
+		border-color: color-mix(in srgb, var(--color-cobalt) 32%, var(--color-line));
+		color: var(--color-cobalt-strong);
+	}
+
+	.status-dot {
+		width: 0.42rem;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: currentColor;
+	}
+
+	.badge-planned {
+		color: #667085;
+	}
+
+	.badge-beta {
+		border-color: #e7a55d;
+		background: #fff8eb;
+		color: #954b08;
+	}
+
+	.badge-stable {
+		border-color: #7ec8a3;
+		background: #effbf5;
+		color: #176b45;
+	}
+</style>

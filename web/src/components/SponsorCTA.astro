@@ -1,0 +1,109 @@
+---
+import { siteConfig } from '../config/site';
+
+interface Props {
+	eyebrow?: string;
+	title?: string;
+	description?: string;
+	compact?: boolean;
+}
+
+const {
+	eyebrow = 'Fund the public roadmap',
+	title = 'Help turn transparent specifications into maintained tools.',
+	description = 'Sponsorship directs engineering time toward documented releases, compatibility work, and public maintenance. It does not gate the catalog.',
+	compact = false,
+} = Astro.props;
+---
+
+<aside class:list={['sponsor-cta', { compact }]} aria-labelledby="sponsor-cta-title">
+	<div>
+		<p class="utility-label">{eyebrow}</p>
+		<h2 id="sponsor-cta-title">{title}</h2>
+		<p>{description}</p>
+	</div>
+	<div class="cta-actions">
+		<a class="primary-action" href={siteConfig.links.sponsor}>Explore sponsorship</a>
+		<a class="secondary-action" href={siteConfig.links.repository}>Inspect the roadmap ↗</a>
+	</div>
+</aside>
+
+<style>
+	.sponsor-cta {
+		display: grid;
+		grid-template-columns: minmax(0, 1.5fr) auto;
+		align-items: end;
+		gap: 2rem;
+		padding: clamp(1.5rem, 1rem + 2.5vw, 3.2rem);
+		border: 1px solid #101827;
+		border-radius: var(--radius-panel);
+		background:
+			linear-gradient(125deg, rgb(36 87 255 / 0.96), rgb(23 70 209 / 0.98)),
+			var(--color-cobalt);
+		color: white;
+		box-shadow: 0.45rem 0.45rem 0 var(--color-signal);
+	}
+
+	.utility-label {
+		color: #dce4ff;
+	}
+
+	h2 {
+		max-width: 18ch;
+		margin-top: 0.65rem;
+		font-size: var(--text-heading);
+	}
+
+	p:not(.utility-label) {
+		margin-top: 1rem;
+		color: #e0e6ff;
+		font-size: var(--text-sm);
+	}
+
+	.cta-actions {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.65rem;
+	}
+
+	.cta-actions a {
+		display: inline-flex;
+		min-height: 2.9rem;
+		align-items: center;
+		justify-content: center;
+		padding: 0.7rem 0.95rem;
+		border: 1px solid white;
+		border-radius: var(--radius-control);
+		font-size: var(--text-sm);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.primary-action {
+		background: white;
+		color: var(--color-cobalt-strong);
+	}
+
+	.secondary-action:hover,
+	.primary-action:hover {
+		background: var(--color-signal);
+		border-color: var(--color-signal);
+		color: var(--color-ink);
+	}
+
+	.compact {
+		padding: 1.4rem;
+	}
+
+	@media (max-width: 46rem) {
+		.sponsor-cta {
+			grid-template-columns: 1fr;
+			align-items: start;
+		}
+
+		.cta-actions {
+			justify-content: flex-start;
+		}
+	}
+</style>

@@ -1,0 +1,131 @@
+---
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+	title="Page not found"
+	description="The requested Ultra Agentic page could not be found."
+	noIndex
+	bodyClass="error-page"
+>
+	<SiteHeader slot="header" />
+
+	<section class="not-found section-pad">
+		<div class="site-container error-grid">
+			<div class="error-code" aria-hidden="true">
+				<span>4</span>
+				<div class="broken-connector"><i></i><i></i></div>
+				<span>4</span>
+			</div>
+			<div>
+				<p class="utility-label">Route disconnected</p>
+				<h1>This endpoint is not on the workbench.</h1>
+				<p>
+					The page may have moved, or the route never existed. Return to the catalog to
+					continue exploring published roadmap entries.
+				</p>
+				<div class="actions">
+					<a class="primary" href="/catalog/">Open the catalog</a>
+					<a href="/">Return home</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<SiteFooter slot="footer" />
+</Layout>
+
+<style>
+	.not-found {
+		display: grid;
+		min-height: min(42rem, 72svh);
+		place-items: center;
+	}
+
+	.error-grid {
+		display: grid;
+		grid-template-columns: 0.9fr 1.1fr;
+		align-items: center;
+		gap: clamp(2rem, 8vw, 8rem);
+	}
+
+	.error-code {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-cobalt);
+		font-family: var(--font-display);
+		font-size: clamp(5rem, 16vw, 11rem);
+		font-weight: 750;
+		line-height: 0.8;
+	}
+
+	.broken-connector {
+		display: flex;
+		width: clamp(2rem, 5vw, 4rem);
+		justify-content: space-between;
+	}
+
+	.broken-connector i {
+		display: block;
+		width: 38%;
+		height: 0.14rem;
+		background: var(--color-signal);
+	}
+
+	.broken-connector i:first-child {
+		transform: rotate(18deg);
+	}
+
+	.broken-connector i:last-child {
+		transform: rotate(-18deg);
+	}
+
+	h1 {
+		max-width: 12ch;
+		margin-top: 0.7rem;
+		font-size: var(--text-heading);
+	}
+
+	.error-grid > div:last-child > p:not(.utility-label) {
+		margin-top: 1rem;
+		color: var(--color-muted);
+	}
+
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.65rem;
+		margin-top: 1.5rem;
+	}
+
+	.actions a {
+		display: inline-flex;
+		min-height: 3rem;
+		align-items: center;
+		padding-inline: 0.95rem;
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-control);
+		background: var(--color-panel);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.actions .primary {
+		background: var(--color-cobalt);
+		color: white;
+		box-shadow: 0.2rem 0.2rem 0 var(--color-signal);
+	}
+
+	@media (max-width: 45rem) {
+		.error-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.error-code {
+			justify-content: flex-start;
+		}
+	}
+</style>

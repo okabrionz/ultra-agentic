@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Sora";
+  src: url("/fonts/sora-latin-wght-normal.woff2") format("woff2-variations");
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/instrument-sans-latin-wght-normal.woff2") format("woff2-variations");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Instrument Sans", "Segoe UI", sans-serif;
+  --font-display: "Sora", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Mono", monospace;
+
+  --color-workbench: #f7f8fc;
+  --color-panel: #ffffff;
+  --color-ink: #111827;
+  --color-muted: #5b6475;
+  --color-line: #cdd4e3;
+  --color-cobalt: #2457ff;
+  --color-cobalt-strong: #1746d1;
+  --color-cobalt-soft: #e9eeff;
+  --color-signal: #ff5c1a;
+  --color-signal-strong: #bd3c0b;
+  --color-signal-soft: #fff0e9;
+
+  --shadow-panel: 0 1px 0 rgb(17 24 39 / 0.08), 0 18px 50px rgb(36 87 255 / 0.08);
+  --ease-workbench: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+:root {
+  --page-gutter: clamp(1rem, 0.55rem + 1.8vw, 2.5rem);
+  --content-width: 76rem;
+  --measure: 68ch;
+  --text-xs: clamp(0.72rem, 0.7rem + 0.08vw, 0.78rem);
+  --text-sm: clamp(0.875rem, 0.84rem + 0.12vw, 0.95rem);
+  --text-body: clamp(1rem, 0.95rem + 0.18vw, 1.125rem);
+  --text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.4rem);
+  --text-heading: clamp(1.65rem, 1.25rem + 1.5vw, 2.75rem);
+  --text-display: clamp(2.5rem, 1.7rem + 3.4vw, 5.5rem);
+  --radius-control: 0.35rem;
+  --radius-panel: 0.75rem;
+  --focus-ring: 0 0 0 3px var(--color-workbench), 0 0 0 6px var(--color-cobalt);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 20rem;
+    background: var(--color-workbench);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100svh;
+    margin: 0;
+    background-color: var(--color-workbench);
+    background-image:
+      linear-gradient(to right, rgb(36 87 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(36 87 255 / 0.045) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    font-size: var(--text-body);
+  }
+
+  main:focus {
+    outline: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-block: 0;
+    font-family: var(--font-display);
+    font-weight: 650;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p,
+  ul,
+  ol,
+  dl,
+  figure,
+  blockquote {
+    margin-block: 0;
+  }
+
+  p {
+    max-width: var(--measure);
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+    font: inherit;
+  }
+
+  button,
+  [role="button"] {
+    cursor: pointer;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-ink);
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    border-radius: var(--radius-control);
+    outline: 2px solid transparent;
+    box-shadow: var(--focus-ring);
+  }
+}
+
+@layer components {
+  .site-shell {
+    display: grid;
+    min-height: 100svh;
+    grid-template-rows: auto 1fr auto;
+    overflow: clip;
+  }
+
+  .site-container {
+    width: min(100% - (2 * var(--page-gutter)), var(--content-width));
+    margin-inline: auto;
+  }
+
+  .section-pad {
+    padding-block: clamp(3.5rem, 2.4rem + 4vw, 7rem);
+  }
+
+  .surface-panel {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    background: color-mix(in srgb, var(--color-panel) 94%, transparent);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .utility-label {
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.09em;
+    line-height: 1.35;
+    text-transform: uppercase;
+  }
+
+  .skip-link {
+    position: fixed;
+    z-index: 100;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    transform: translateY(calc(-100% - 1rem));
+    border: 2px solid var(--color-ink);
+    border-radius: var(--radius-control);
+    background: var(--color-panel);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: transform 160ms var(--ease-workbench);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-line: #6b7280;
+    --focus-ring: 0 0 0 3px var(--color-workbench), 0 0 0 7px var(--color-cobalt-strong);
+  }
+}
