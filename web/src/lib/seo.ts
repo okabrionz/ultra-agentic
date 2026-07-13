@@ -3,6 +3,7 @@ import {
   catalogMaturityLabels,
   catalogTypeLabels,
   type CatalogMaturity,
+  type CatalogRelease,
   type CatalogType
 } from './catalog';
 
@@ -13,6 +14,13 @@ type CatalogEntrySeoData = {
   maturity: CatalogMaturity;
   tags: readonly string[];
   source?: string;
+  release?: CatalogRelease;
+};
+
+const catalogProgrammingLanguages: Record<CatalogType, string> = {
+  mcp: 'TypeScript',
+  skill: 'Markdown',
+  dataset: 'JSON'
 };
 
 type PageMetadataOptions = {
@@ -68,6 +76,27 @@ export function buildCatalogEntryStructuredData(
   const pageUrl =
     config.siteUrl && pathname ? new URL(pathname, config.siteUrl).toString() : undefined;
 
+  if (entry.maturity !== 'planned' && entry.source && entry.release) {
+    const downloadUrl = config.siteUrl
+      ? new URL(entry.release.download, config.siteUrl).toString()
+      : entry.release.download;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareSourceCode',
+      name: entry.title,
+      description: entry.summary,
+      codeRepository: entry.source,
+      softwareVersion: entry.release.version,
+      downloadUrl,
+      isAccessibleForFree: true,
+      programmingLanguage: catalogProgrammingLanguages[entry.type],
+      creativeWorkStatus: catalogMaturityLabels[entry.maturity],
+      keywords: [...entry.tags],
+      ...(pageUrl ? { url: pageUrl } : {})
+    };
+  }
+
   return {
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
@@ -76,8 +105,7 @@ export function buildCatalogEntryStructuredData(
     genre: catalogTypeLabels[entry.type],
     creativeWorkStatus: catalogMaturityLabels[entry.maturity],
     keywords: [...entry.tags],
-    ...(pageUrl ? { url: pageUrl } : {}),
-    ...(entry.source ? { sameAs: entry.source } : {})
+    ...(pageUrl ? { url: pageUrl } : {})
   };
 }
 

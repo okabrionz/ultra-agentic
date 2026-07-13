@@ -9,9 +9,9 @@ interface Props {
 }
 
 const {
-	eyebrow = 'Fund the public roadmap',
-	title = 'Help turn transparent specifications into maintained tools.',
-	description = 'Sponsorship directs engineering time toward documented releases, compatibility work, and public maintenance. It does not gate the catalog.',
+	eyebrow = 'Fund public maintenance',
+	title = 'Help maintain beta tools and advance planned specifications.',
+	description = 'Sponsorship directs engineering time toward documented releases, compatibility work, and public maintenance. Downloads and catalog access remain public.',
 	compact = false,
 } = Astro.props;
 ---
@@ -24,7 +24,7 @@ const {
 	</div>
 	<div class="cta-actions">
 		<a class="primary-action" href={siteConfig.links.sponsor}>Explore sponsorship</a>
-		<a class="secondary-action" href={siteConfig.links.repository}>Inspect the roadmap ↗</a>
+		<a class="secondary-action" href={siteConfig.links.repository}>Inspect the repository ↗</a>
 	</div>
 </aside>
 

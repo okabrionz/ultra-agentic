@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 
 import CatalogBadge from './CatalogBadge.astro';
+import ReleaseStrip from './ReleaseStrip.astro';
 
 interface Props {
 	entry: CollectionEntry<'catalog'>;
@@ -40,17 +41,16 @@ const searchText = [
 		{data.tags.slice(0, compact ? 2 : 3).map((tag) => <li>{tag}</li>)}
 	</ul>
 
+	{
+		data.release && data.source && (
+			<ReleaseStrip release={data.release} source={data.source} variant="card" />
+		)
+	}
+
 	<div class="card-actions">
 		<span class="details-link" aria-hidden="true">
 			View details <span aria-hidden="true">→</span>
 		</span>
-		{
-			data.source && (
-				<a class="source-link" href={data.source}>
-					Source <span aria-hidden="true">↗</span>
-				</a>
-			)
-		}
 	</div>
 </article>
 
@@ -59,7 +59,7 @@ const searchText = [
 		position: relative;
 		display: grid;
 		min-height: 100%;
-		grid-template-rows: auto 1fr auto auto;
+		grid-template-rows: auto 1fr auto auto auto;
 		gap: 1.25rem;
 		padding: clamp(1.25rem, 1rem + 1vw, 1.8rem);
 		overflow: hidden;
@@ -151,10 +151,6 @@ const searchText = [
 		color: var(--color-cobalt-strong);
 		font-weight: 700;
 		text-decoration: none;
-	}
-
-	.source-link {
-		color: var(--color-muted);
 	}
 
 	.compact {

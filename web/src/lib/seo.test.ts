@@ -61,11 +61,11 @@ describe('buildCatalogEntryStructuredData', () => {
   test('marks a source-free planned entry as a specification rather than software', () => {
     const structuredData = buildCatalogEntryStructuredData(
       {
-        title: 'Repository Operations MCP',
-        summary: 'A planned MCP server specification.',
+        title: 'Database Context MCP',
+        summary: 'A planned database MCP server specification.',
         type: 'mcp',
         maturity: 'planned',
-        tags: ['automation', 'git']
+        tags: ['databases', 'sql']
       },
       siteConfig
     );
@@ -73,17 +73,19 @@ describe('buildCatalogEntryStructuredData', () => {
     expect(structuredData).toMatchObject({
       '@context': 'https://schema.org',
       '@type': 'TechArticle',
-      headline: 'Repository Operations MCP',
-      description: 'A planned MCP server specification.',
+      headline: 'Database Context MCP',
+      description: 'A planned database MCP server specification.',
       genre: 'MCP',
       creativeWorkStatus: 'Planned',
-      keywords: ['automation', 'git']
+      keywords: ['databases', 'sql']
     });
     expect(structuredData).not.toHaveProperty('codeRepository');
+    expect(structuredData).not.toHaveProperty('downloadUrl');
+    expect(structuredData).not.toHaveProperty('softwareVersion');
     expect(structuredData).not.toHaveProperty('url');
   });
 
-  test('includes only source and page URLs that are actually configured', () => {
+  test('describes a released skill as free source code with configured absolute URLs', () => {
     const configuredSite = {
       ...siteConfig,
       siteUrl: 'https://ultra-agentic.example'
@@ -92,20 +94,74 @@ describe('buildCatalogEntryStructuredData', () => {
     expect(
       buildCatalogEntryStructuredData(
         {
-          title: 'Deployment Skill',
-          summary: 'A beta deployment workflow.',
+          title: 'Deployment Readiness Skill',
+          summary: 'A beta deployment-readiness workflow.',
           type: 'skill',
           maturity: 'beta',
           tags: ['deployment'],
-          source: 'https://github.com/deirs/ultra-agentic/tree/main/deployment'
+          source: 'https://github.com/deirs/ultra-agentic/tree/main/skills/deployment-readiness',
+          release: {
+            artifact: 'deployment-readiness-skill',
+            version: '0.1.0',
+            download: '/downloads/deployment-readiness-skill-0.1.0.zip',
+            quickStart: [
+              {
+                label: 'Copy the extracted skill',
+                command: 'cp -R deployment-readiness .cursor/skills/'
+              }
+            ]
+          }
         },
         configuredSite,
-        '/catalog/deployment-skill/'
+        '/catalog/deployment-readiness-skill/'
       )
-    ).toMatchObject({
-      url: 'https://ultra-agentic.example/catalog/deployment-skill/',
-      sameAs: 'https://github.com/deirs/ultra-agentic/tree/main/deployment'
+    ).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareSourceCode',
+      name: 'Deployment Readiness Skill',
+      description: 'A beta deployment-readiness workflow.',
+      codeRepository:
+        'https://github.com/deirs/ultra-agentic/tree/main/skills/deployment-readiness',
+      softwareVersion: '0.1.0',
+      downloadUrl:
+        'https://ultra-agentic.example/downloads/deployment-readiness-skill-0.1.0.zip',
+      isAccessibleForFree: true,
+      programmingLanguage: 'Markdown',
+      creativeWorkStatus: 'Beta',
+      keywords: ['deployment'],
+      url: 'https://ultra-agentic.example/catalog/deployment-readiness-skill/'
     });
+  });
+
+  test('keeps a released MCP download site-relative until a production origin is configured', () => {
+    const structuredData = buildCatalogEntryStructuredData(
+      {
+        title: 'Repository Operations MCP',
+        summary: 'A beta repository MCP server.',
+        type: 'mcp',
+        maturity: 'beta',
+        tags: ['repositories'],
+        source:
+          'https://github.com/deirs/ultra-agentic/tree/main/packages/repository-operations-mcp',
+        release: {
+          artifact: 'repository-operations-mcp',
+          version: '0.1.0',
+          download: '/downloads/repository-operations-mcp-0.1.0.zip',
+          quickStart: [
+            { label: 'Install dependencies', command: 'npm install --omit=dev' }
+          ]
+        }
+      },
+      siteConfig,
+      '/catalog/repository-operations-mcp/'
+    );
+
+    expect(structuredData).toMatchObject({
+      '@type': 'SoftwareSourceCode',
+      programmingLanguage: 'TypeScript',
+      downloadUrl: '/downloads/repository-operations-mcp-0.1.0.zip'
+    });
+    expect(structuredData).not.toHaveProperty('url');
   });
 });
 

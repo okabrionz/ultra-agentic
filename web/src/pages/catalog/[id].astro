@@ -2,15 +2,21 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 import CatalogBadge from '../../components/CatalogBadge.astro';
+import ReleaseStrip from '../../components/ReleaseStrip.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SponsorCTA from '../../components/SponsorCTA.astro';
 import { siteConfig } from '../../config/site';
 import Layout from '../../layouts/Layout.astro';
+import {
+	catalogMaturityLabels,
+	getCatalogMaturityDescription,
+	validateCatalogEntries,
+} from '../../lib/catalog';
 import { buildCatalogEntryStructuredData } from '../../lib/seo';
 
 export async function getStaticPaths() {
-	const entries = await getCollection('catalog');
+	const entries = validateCatalogEntries(await getCollection('catalog'));
 	return entries.map((entry) => ({
 		params: { id: entry.id },
 		props: { entry },
@@ -50,17 +56,11 @@ const structuredData = buildCatalogEntryStructuredData(data, siteConfig, Astro.u
 			</div>
 			<aside class="truth-panel surface-panel">
 				<p class="utility-label">Published state</p>
-				<strong>{data.maturity}</strong>
-				<p>
-					{
-						data.maturity === 'planned'
-							? 'This page documents intended scope. It is not a released package, hosted service, or usage claim.'
-							: `This entry is marked ${data.maturity}. Review its source and compatibility notes before adoption.`
-					}
-				</p>
+				<strong>{catalogMaturityLabels[data.maturity]}</strong>
+				<p>{getCatalogMaturityDescription(data.maturity, data.release?.version)}</p>
 				{
-					data.source ? (
-						<a href={data.source}>Inspect source ↗</a>
+					data.release && data.source ? (
+						<ReleaseStrip release={data.release} source={data.source} variant="detail" />
 					) : (
 						<span>No source artifact published</span>
 					)
@@ -76,6 +76,28 @@ const structuredData = buildCatalogEntryStructuredData(data, siteConfig, Astro.u
 				<h2 id="overview-heading">Current scope</h2>
 				<div class="entry-content"><Content /></div>
 			</section>
+
+			{
+				data.release && (
+					<section aria-labelledby="quick-start-heading">
+						<p class="utility-label">Release v{data.release.version}</p>
+						<h2 id="quick-start-heading">Quick start</h2>
+						<ol class="quick-start-list">
+							{
+								data.release.quickStart.map((step, index) => (
+									<li>
+										<h3 id={`quick-start-step-${index}`}>{step.label}</h3>
+										<pre
+											aria-labelledby={`quick-start-step-${index}`}
+											tabindex="0"
+										><code>{step.command}</code></pre>
+									</li>
+								))
+							}
+						</ol>
+					</section>
+				)
+			}
 
 			<section aria-labelledby="capabilities-heading">
 				<p class="utility-label">Declared capabilities</p>
@@ -201,6 +223,41 @@ const structuredData = buildCatalogEntryStructuredData(data, siteConfig, Astro.u
 
 	.entry-content :global(p + p) {
 		margin-top: 1rem;
+	}
+
+	.quick-start-list {
+		display: grid;
+		gap: 0.8rem;
+		margin-top: 1.5rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.quick-start-list li {
+		min-width: 0;
+		padding: 1rem;
+		border: 1px solid var(--color-line);
+		border-left: 0.22rem solid var(--color-cobalt);
+		border-radius: var(--radius-control);
+		background: var(--color-panel);
+	}
+
+	.quick-start-list h3 {
+		font-size: 1rem;
+	}
+
+	.quick-start-list pre {
+		max-width: 100%;
+		margin: 0.7rem 0 0;
+		overflow-x: auto;
+		border-radius: var(--radius-control);
+		background: var(--color-ink);
+		color: white;
+		padding: 0.85rem;
+		font-family: var(--font-mono);
+		font-size: var(--text-sm);
+		line-height: 1.5;
+		white-space: pre;
 	}
 
 	.capability-list {

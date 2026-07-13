@@ -1,14 +1,21 @@
 ---
+import { getCollection } from 'astro:content';
+
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SponsorCTA from '../components/SponsorCTA.astro';
 import Layout from '../layouts/Layout.astro';
 import { siteConfig } from '../config/site';
+import { validateCatalogEntries } from '../lib/catalog';
+
+const entries = validateCatalogEntries(await getCollection('catalog'));
+const betaCount = entries.filter((entry) => entry.data.maturity === 'beta').length;
+const plannedCount = entries.filter((entry) => entry.data.maturity === 'planned').length;
 ---
 
 <Layout
 	title="About the Agent Infrastructure Catalog"
-	description="Learn why Ultra Agentic separates agent connections, procedures, and datasets—and how its catalog communicates roadmap truth."
+	description="Learn why Ultra Agentic separates agent connections, procedures, and datasets—and how its catalog communicates release maturity."
 >
 	<SiteHeader slot="header" />
 
@@ -81,13 +88,18 @@ import { siteConfig } from '../config/site';
 		<div class="site-container state-panel surface-panel">
 			<div>
 				<p class="utility-label">Project state / July 2026</p>
-				<h2>The catalog is populated. The source roadmap is at an early stage.</h2>
+				<h2>{betaCount} beta artifacts are downloadable. {plannedCount} entries remain planned.</h2>
 			</div>
 			<div>
-				<p>
-					Current entries are intentionally marked planned because published implementation
-					evidence does not yet exist. The content collection is the launch source of truth
-					and is designed to preserve route contracts if GitHub synchronization is added later.
+				<p
+					data-catalog-summary-counts
+					data-beta-count={betaCount}
+					data-planned-count={plannedCount}
+				>
+					{betaCount} beta entries publish source and versioned ZIP files for evaluation.
+					{plannedCount} planned entries intentionally omit source and release controls because
+					implementation evidence does not yet exist. The content collection remains the catalog
+					source of truth.
 				</p>
 				<a href={siteConfig.links.repository}>Inspect the repository ↗</a>
 			</div>

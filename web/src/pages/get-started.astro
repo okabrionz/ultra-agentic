@@ -1,14 +1,21 @@
 ---
+import { getCollection } from 'astro:content';
+
 import ConnectorMap from '../components/ConnectorMap.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SponsorCTA from '../components/SponsorCTA.astro';
 import Layout from '../layouts/Layout.astro';
+import { validateCatalogEntries } from '../lib/catalog';
+
+const entries = validateCatalogEntries(await getCollection('catalog'));
+const betaCount = entries.filter((entry) => entry.data.maturity === 'beta').length;
+const plannedCount = entries.filter((entry) => entry.data.maturity === 'planned').length;
 ---
 
 <Layout
 	title="Evaluate and Compose Agent Tools"
-	description="Learn how to evaluate and compose Ultra Agentic catalog entries without mistaking roadmap specifications for released artifacts."
+	description="Learn how to evaluate Ultra Agentic beta downloads and planned specifications by maturity, compatibility, and source evidence."
 >
 	<SiteHeader slot="header" />
 
@@ -16,10 +23,14 @@ import Layout from '../layouts/Layout.astro';
 		<div class="site-container intro">
 			<p class="utility-label">Get started / read before adoption</p>
 			<h1>Compose from evidence, not assumptions.</h1>
-			<p>
-				Ultra Agentic is currently a public roadmap catalog. Use each entry to understand
-				intended scope, then verify maturity, compatibility, and source availability before
-				building around it.
+			<p
+				data-catalog-summary-counts
+				data-beta-count={betaCount}
+				data-planned-count={plannedCount}
+			>
+				The public catalog contains {betaCount} beta artifacts with downloads and {plannedCount}{' '}
+				planned specifications. Verify maturity, compatibility, source, and release notes before
+				building around any entry.
 			</p>
 		</div>
 	</header>
@@ -55,8 +66,8 @@ import Layout from '../layouts/Layout.astro';
 				<li>
 					<span>04</span>
 					<div>
-						<h3>Inspect source when available</h3>
-						<p>A missing source action means no artifact URL is published. Do not infer a package, endpoint, or release.</p>
+						<h3>Download and inspect the evidence</h3>
+						<p>Beta entries expose a versioned ZIP and source link. A planned entry exposes neither, so do not infer a package, endpoint, or release.</p>
 					</div>
 				</li>
 			</ol>
@@ -85,7 +96,7 @@ import Layout from '../layouts/Layout.astro';
 				<article class="surface-panel">
 					<p class="utility-label">I want to contribute</p>
 					<h3>Follow the repository</h3>
-					<p>Review the public roadmap and future source artifacts where they are published.</p>
+					<p>Review current beta source and follow planned work through the public repository.</p>
 					<a href="https://github.com/deirs/ultra-agentic">View GitHub ↗</a>
 				</article>
 			</div>

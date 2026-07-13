@@ -7,10 +7,12 @@ import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SponsorCTA from '../components/SponsorCTA.astro';
 import Layout from '../layouts/Layout.astro';
-import { sortCatalogEntries } from '../lib/catalog';
+import { sortCatalogEntries, validateCatalogEntries } from '../lib/catalog';
 
-const entries = sortCatalogEntries(await getCollection('catalog'));
+const entries = sortCatalogEntries(validateCatalogEntries(await getCollection('catalog')));
 const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 4);
+const betaEntries = entries.filter((entry) => entry.data.maturity === 'beta');
+const plannedEntries = entries.filter((entry) => entry.data.maturity === 'planned');
 ---
 
 <Layout>
@@ -19,7 +21,7 @@ const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 
 	<section class="hero section-pad">
 		<div class="site-container hero-grid">
 			<div class="hero-copy">
-				<p class="utility-label">Open agent infrastructure / launch roadmap</p>
+				<p class="utility-label">Open agent infrastructure / public beta</p>
 				<h1>Build capable agents from <span>clear, composable parts.</span></h1>
 				<p class="hero-lead">
 					Ultra Agentic is a transparent catalog of MCP servers, reusable skills, and
@@ -35,16 +37,21 @@ const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 
 				<div class="state-header">
 					<span class="live-dot" aria-hidden="true"></span>
 					<span>Catalog state</span>
-					<strong>ROADMAP</strong>
+					<strong>PUBLIC BETA</strong>
 				</div>
 				<dl>
-					<div><dt>{entries.length}</dt><dd>specified entries</dd></div>
-					<div><dt>3</dt><dd>composable layers</dd></div>
-					<div><dt>0</dt><dd>fabricated claims</dd></div>
+					<div><dt>{entries.length}</dt><dd>catalog entries</dd></div>
+					<div><dt>{betaEntries.length}</dt><dd>beta downloads</dd></div>
+					<div><dt>{plannedEntries.length}</dt><dd>planned specs</dd></div>
 				</dl>
-				<p>
-					Every entry publishes a maturity label. Planned entries are specifications—not
-					downloads or evidence of production use.
+				<p
+					data-catalog-summary-counts
+					data-beta-count={betaEntries.length}
+					data-planned-count={plannedEntries.length}
+				>
+					{betaEntries.length} beta artifacts are available as public ZIP downloads.
+					{plannedEntries.length} planned entries remain specifications with no published source
+					artifact.
 				</p>
 				<a href="/about/#catalog-policy">Read the catalog policy →</a>
 			</aside>
@@ -61,7 +68,7 @@ const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 
 		<div class="site-container">
 			<div class="section-heading">
 				<div>
-					<p class="utility-label">Featured specifications</p>
+					<p class="utility-label">Featured catalog entries</p>
 					<h2>Start with the workflows teams rebuild most.</h2>
 				</div>
 				<a href="/catalog/">View all entries <span aria-hidden="true">→</span></a>
@@ -78,8 +85,8 @@ const featuredEntries = entries.filter((entry) => entry.data.featured).slice(0, 
 				<p class="utility-label">Developer outcomes</p>
 				<h2>Spend less time rebuilding connective tissue.</h2>
 				<p>
-					The roadmap prioritizes inspectable boundaries and reusable procedures. These are
-					design goals for planned work, not measured performance claims.
+					Beta artifacts publish inspectable boundaries and reusable procedures for evaluation.
+					Planned entries describe intended work; neither status implies production suitability.
 				</p>
 			</div>
 			<ol>

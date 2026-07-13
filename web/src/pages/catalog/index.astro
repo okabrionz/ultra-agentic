@@ -7,14 +7,16 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import SponsorCTA from '../../components/SponsorCTA.astro';
 import Layout from '../../layouts/Layout.astro';
-import { sortCatalogEntries } from '../../lib/catalog';
+import { sortCatalogEntries, validateCatalogEntries } from '../../lib/catalog';
 
-const entries = sortCatalogEntries(await getCollection('catalog'));
+const entries = sortCatalogEntries(validateCatalogEntries(await getCollection('catalog')));
+const betaCount = entries.filter((entry) => entry.data.maturity === 'beta').length;
+const plannedCount = entries.filter((entry) => entry.data.maturity === 'planned').length;
 ---
 
 <Layout
 	title="Agent Tool Catalog"
-	description="Browse the transparent Ultra Agentic roadmap of MCP servers, agent skills, and datasets."
+	description="Browse public Ultra Agentic beta downloads and planned MCP server, agent skill, and dataset specifications."
 >
 	<SiteHeader slot="header" />
 
@@ -25,10 +27,14 @@ const entries = sortCatalogEntries(await getCollection('catalog'));
 					<p class="utility-label">Public catalog / honest states</p>
 					<h1>Find the right layer for your agent workflow.</h1>
 				</div>
-				<p>
-					Search roadmap entries by capability, compatibility, type, or maturity. Planned
-					means specified—not shipped. Source links only appear when an artifact URL is
-					published.
+				<p
+					data-catalog-summary-counts
+					data-beta-count={betaCount}
+					data-planned-count={plannedCount}
+				>
+					Search by capability, compatibility, type, or maturity. {betaCount} beta entries include
+					public ZIP downloads and source links. {plannedCount} planned entries are specified—not
+					shipped—and have no published artifact.
 				</p>
 			</div>
 		</header>
